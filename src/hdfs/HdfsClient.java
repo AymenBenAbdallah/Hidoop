@@ -1,12 +1,18 @@
 /* une PROPOSITION de squelette, incomplète et adaptable... */
 
-package hdfs;
-import formats.Format;
-import formats.KV;
-import formats.KVFormat;
-import formats.LineFormat;
+package src.hdfs;
+
+import java.io.*;
+import java.net.Socket;
+import src.formats.Format;
+import src.formats.KV;
+import src.formats.KVFormat;
+import src.formats.LineFormat;
 
 public class HdfsClient {
+
+    private static int numPorts[] = {7650, 7654, 3478, 5481, 7193};
+    private static String nomMachines[] = {"aymen, ali, luc, sherwin, khalil"};
 
     private static void usage() {
         System.out.println("Usage: java HdfsClient read <file>");
@@ -14,12 +20,82 @@ public class HdfsClient {
         System.out.println("Usage: java HdfsClient delete <file>");
     }
 	
-    public static void HdfsDelete(String hdfsFname) {}
+    public static void HdfsDelete(String hdfsFname) {
+        try{
+            int nbServers = nomMachines.length;
+            for (int i = 0; i < nbServers; i++) {
+                Socket sock = new Socket (nomMachines[i], numPorts[i]);
+                ObjectOutputStream objectOS = new ObjectOutputStream(sock.getOutputStream());
+                objectOS.writeObject(Commande.CMD_DELETE.toString() + " " + hdfsFname + Integer.toString(i));
+                objectOS.close();
+                sock.close();                
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 	
     public static void HdfsWrite(Format.Type fmt, String localFSSourceFname, 
-     int repFactor) { }
+     int repFactor) {
+         try {
+            int nbLignes = 0;
+            FileReader fRead = new FileReader(localFSSourceFname);
+            BufferedReader bRead = new BufferedReader(fRead);
+            while (bRead.readLine() != null) {
+                nbLignes ++;
+            }
+            BufferedReader bRRead = new BufferedReader(fRead);
 
-    public static void HdfsRead(String hdfsFname, String localFSDestFname) { }
+            // Division du fichier
+            int nbServers = nomMachines.length;
+            int division = nbLignes / nbServers;
+            int reste = nbLignes % nbServers;
+            for (int i = 0; i < nomMachines.length; i++) {
+                int taille = division;
+
+                // cas ou reste existe
+                if (reste != 0) {
+                    taille ++;
+                    reste --;
+                }
+                String fragment = "";
+                for (int j = 0; j < taille; j++) {
+                    fragment = fragment + bRRead.readLine() + "\n";
+                }
+
+                Socket socket = new Socket (nomMachines[i], numPorts[i]);
+                ObjectOutputStream objectOS = new ObjectOutputStream(socket.getOutputStream());
+                objectOS.writeObject(Commande.CMD_WRITE.toString() + " " + localFSSourceFname + "_i" + fragment);
+                objectOS.close();
+                bRead.close();
+                bRRead.close();
+                socket.close();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static void HdfsRead(String hdfsFname, String localFSDestFname) {
+        File file = File(localFSDestFname);
+        try {
+            FileWriter fWrite = new FileWriter(file);
+            for (int i = 0; i < nomMachines.length; i++) {
+                Socket socket = new Socket (nomMachines[i], numPorts[i]);
+                ObjectOutputStream objectOS = new ObjectOutputStream(socket.getOutputStream());
+                ObjectInputStream objectIS = new ObjectInputStream(socket.getInputStream());
+                objectOS.writeObject(Commande.CMD_READ.toString() + " " + hdfsFname + "_" + Integer.toString(i));
+                String fragment = (String) objectIS.readObject();
+                fWrite.write(fragment,0,fragment.length());
+                objectOS.close();
+                objectIS.close();
+                socket.close();
+                fWrite.close();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
 	
     public static void main(String[] args) {

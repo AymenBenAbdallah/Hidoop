@@ -77,7 +77,7 @@ public class HdfsClient {
     }
 
     public static void HdfsRead(String hdfsFname, String localFSDestFname) {
-        File file = File(localFSDestFname);
+        File file = new File(localFSDestFname);
         try {
             FileWriter fWrite = new FileWriter(file);
             for (int i = 0; i < nomMachines.length; i++) {

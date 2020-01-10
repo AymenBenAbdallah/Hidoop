@@ -4,10 +4,7 @@ package src.hdfs;
 
 import java.io.*;
 import java.net.Socket;
-import src.formats.Format;
-import src.formats.KV;
-import src.formats.KVFormat;
-import src.formats.LineFormat;
+import src.formats.*;
 
 public class HdfsClient {
 

@@ -1,20 +1,48 @@
 package ordo;
 
 import java.net.MalformedURLException;
+
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
+import java.util.Arrays;
 
 import application.MyMapReduce;
+import formats.Format;
 import formats.Format.Type;
+import formats.FormatReader;
+import formats.FormatWriter;
+import formats.KVFormat;
+import formats.LineFormat;
 import hdfs.HdfsClient;
+import java.io.*;
 
 public class HidoopClient {
+	
+	private static void usage() {
+		System.out.println("Utilisation : java HidoopClient fichier format");
+	}
+
+	private static void recupURL(String[] urls) {
+		File file = new File("../config/config_hidoop.cfg");
+		int cpt = 0;
+		  
+		BufferedReader br;
+		try {
+			br = new BufferedReader(new FileReader(file));
+			String st; 
+			while ((st = br.readLine()) != null)
+				urls[cpt] = st;
+				cpt++;
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public static void main (String args[]) throws RemoteException {
-		// Déclaration des variables
+		// Formats de fichiers utilisables
+		String[] formats = {"line","kv"};
 		
 		// Nom du fichier écrit sur HDFS via HDFSClient 
 		String hdfsFname;
@@ -22,25 +50,16 @@ public class HidoopClient {
 		// Nom du fichier traité local
 		String localFSDestFname;
 		
+		// Fichiers source / destination
+		FormatReader reader;
+		FormatWriter writer;
+		
 		// nombre de machines contenues dans le cluster
 		int nbCluster;
 		
-		// registre contenant les références
-		// aux services des machines du cluster
-		Registry registre;
-		
-		// port correspondant au registre 
-		int port = 0;
-		
-		// informations de format
+		// informations de format de fichier
 		String fname;
 		Type ft;
-		
-		// objet MapReduce utilisé
-		MyMapReduce mr;
-		
-		// objet Job sur lequel on applique startJob
-		Job job;
 		
 		// liste des url correspondant aux démons du cluster
 		String urlDaemon[];
@@ -49,53 +68,71 @@ public class HidoopClient {
 		Daemon listeDaemon[];
 		
 		try {
-			// initialisation des variables
-			nbCluster = 0;
-			port = 0;
+			if (args.length < 2) {
+				usage();
+				System.exit(1);
+			} else {
+				if (!Arrays.asList(formats).contains(args[1])) {
+					usage();
+					System.exit(1);
+				}
+			}
 			
-			fname = "";
-			ft = null;
+			// Informations sur les fichiers manipulés
+			hdfsFname = args[0];
+			ft = Format.Type.KV;
+			localFSDestFname = hdfsFname + "-res";
 			
-			urlDaemon = new String[nbCluster];
-			listeDaemon = new Daemon[nbCluster];
+			// Récupérer le format de fichier indiqué en argument
+			if (args[1].equals("line")) {
+				ft = Format.Type.LINE;
+				reader = new LineFormat(fname);
+				writer = new LineFormat("");
+				
+			} else {
+				ft = Format.Type.KV;
+				reader = new KVFormat(fname);
+				writer = new KVFormat("")
+			}
+						
+			// informations sur le cluster
+			nbCluster = 5;
 			
-			// création du registre sur le port indiqué
-			registre = LocateRegistry.createRegistry(port);
-			
+			urlDaemon = new String[nbCluster];			
+			recupURL(urlDaemon);
+
 			// récupérer les références des objets Daemon distants
 			// à l'aide des url (déjà connues)
+			listeDaemon = new Daemon[nbCluster];
+			
 			for (int i = 0 ; i < nbCluster ; i++) { 
 				listeDaemon[i]=(Daemon) Naming.lookup(urlDaemon[i]);
 			}
 			
-			// création et définition des atributs de l'objet Job
+			// création et définition des attributs de l'objet Job
 			// on donne la liste des références aux Daemons à l'objet Job
-			job = new Job(listeDaemon, nbCluster);
+			Job job = new Job(listeDaemon);
 			
-			job.setInputFname(fname);
+			// indiquer à job le nom et format du fichier à traiter
+			job.setInputFname(hdfsFname);
 			job.setInputFormat(ft);
 			
 			// création de l'objet MapReduce
-			mr = new MyMapReduce();
+			MyMapReduce mr = new MyMapReduce();
 			
 			// lancement des tâches
 			job.startJob(mr);
 			
-			// attendre que toutes les tâches soient terminees
-			while(true) {
-				if (job.nbTachesFinies == nbCluster) {
-					break;
-				}
-			}
+			// attendre que toutes les tâches soient terminées
+			while(!job.traitementFini());
 			
 			// récupérer le fichier traité via HDFS
 			HdfsClient.HdfsRead(hdfsFname, localFSDestFname);
 			
-			// appliquer le reduce() sur le résultat
+			// appliquer reduce sur le résultat
+			// reader : format kv ; writer : format kv
 			mr.reduce(reader, writer);
-			
-		// gestion des exceptions
-			
+						
 		} catch (RemoteException e) {
 			e.printStackTrace();
 			

@@ -11,22 +11,29 @@ import formats.Format;
 import formats.Format.Type;
 import map.MapReduce;
 
-public class Job implements JobInterface, CallBack {
+public class Job implements JobInterface {
 	
+	// informations sur le fichier à traiter 
 	private Type InputFormat;
 	private String InputFname;
+	
+	// objet Callback
+	private CallBack cb;
+	
+	// liste des références aux démons du cluster
 	private Daemon[] listeDaemon;
-	private int nbCluster;
 	
 	// nombre de tâches finies
 	int nbTachesFinies;
 	
-	public Job (Daemon[] listeDaemon, int nbCluster) {
+	// nombre de daemons
+	int nbDaemons;
+	
+	public Job (Daemon[] listeDaemon) {
 		this.InputFormat = null;
 		this.InputFname = null;
-		this.listeDaemon = listeDaemon;
-		this.nbCluster = nbCluster;
-		this.nbTachesFinies = 0;
+		this.listeDaemon = listeDaemon;		
+		this.nbDaemons = listeDaemon.length;
 	}
 
 	public void setInputFormat(Type ft) {
@@ -36,16 +43,17 @@ public class Job implements JobInterface, CallBack {
 	public void setInputFname(String fname) {
 		this.InputFname = fname;
 	}
+	
+	public boolean traitementFini() {
+		return (this.cb.getTachesFinies() == nbDaemons);
+	}
 
 	public void startJob(MapReduce mr) {
 		// appliquer runMap sur chaque machine du cluster
-		for (int i = 0 ; i < nbCluster ; i++) { 
-			listeDaemon[i].runMap(m, reader, writer, cb);
+		// reader : format line ; writer : format kv
+		for (int i = 0 ; i < nbDaemons; ; i++) {
+			listeDaemon[i].runMap(mr, reader, writer, cb);
 		}
-	}
-
-	public void tacheFinie() {
-		this.nbTachesFinies++;
 	}
 
 }

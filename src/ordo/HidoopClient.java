@@ -30,7 +30,7 @@ public class HidoopClient {
 	
 	// récupérer les emplacements indiqués dans le fichier de configuration
 	private static void recupURL(String[] urls) {
-		File file = new File("../../config/config_hidoop.cfg");
+		File file = new File("../config/config_hidoop.cfg");
 		int cpt = 0;
 		  
 		BufferedReader br;

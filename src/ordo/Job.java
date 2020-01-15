@@ -41,7 +41,7 @@ public class Job implements JobInterface {
 	// Récupérer le nombre de fragments du fichier HDFS
 	// via le fichier node (couple "nom:nbFragments" à chaque ligne)
 	private static int recupNode(String fname) {
-		String nom_node = "node";
+		String nom_node = "../config/node";
 		int res = 0;
 		
 		BufferedReader br;

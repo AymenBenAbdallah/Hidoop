@@ -11,7 +11,7 @@ public class HdfsClient {
 
     private static int numPorts[] = {7650, 7654, 3478, 5481, 7193};
     private static String nomMachines[] = {"aymen, ali, luc, sherwin, khalil"};
-    final static Long nbServers = 5;
+    final static int nbServers = 5;
     private static long taille_fragment = 185;
     private static KV cst = new KV("hi","hello");
 

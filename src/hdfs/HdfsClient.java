@@ -26,7 +26,10 @@ public class HdfsClient {
         	int j ;
         	
             // supprimer les fichiers générés des serveurs
-            
+        	
+        	Namenode node = new Namenode();
+        	int nbfragments = node.getNbFragments(hdfsFname);	// nb de fragments du fichier
+        	
             for (int i = 0; i < nbfragments; i++) {
             	j = i % nbServers; 
                 Socket sock = new Socket (nomMachines[j], numPorts[j]);
@@ -38,22 +41,9 @@ public class HdfsClient {
         	
         	//supprimer les info de hdfsFname du fichier node.
         	
-        	LineFormat node = new LineFormat("../config/node.txt");
-        	node.open();
-        	
-        	int index = 0;
-        	int indexancient = 0;
-        	KV buffer = cst;
-            while (buffer != null){
-            	indexancient = index;
-                buffer = fichier.read();
-                String[] lis = (buffer.v).split(":");
-                index = fichier.getIndex();
-                if (lis[0] == hdfsFname) {
-                	//supprimer la ligne contenant ce nom
-                	buffer = null;
-                }
-            }
+            
+        	node.Enlever(hdfsFname);					// suppression de l'occurence du fichier dans la node
+            
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -80,9 +70,8 @@ public class HdfsClient {
             
         	// ajouter le nombre de fragments dans le fichier node.
         	
-        	FileWriter node = new Filewriter("../config/node.txt");
-        	node.write(localFSSourceFname+":"+Integer.toString(nbfragments)+"\n");
-        	node.close();
+        	Namenode node = new Namenode();
+        	node.Ajouter(localFSSourceFname, nbfragments);
             
         	// le cas d'un lineformat fichier:
         	
@@ -151,6 +140,8 @@ public class HdfsClient {
         try {
         	int j;
             FileWriter fWrite = new FileWriter(file);
+            Namenode node = new Namenode();
+        	int nbfragments = node.getNbFragments(localFSDestFname);
             for (int i = 0; i < nbfragments; i++) {
             	j = i % nbServers;
                 Socket socket = new Socket (nomMachines[j], numPorts[j]);
@@ -198,4 +189,5 @@ public class HdfsClient {
 // travaille et puis le nombre de fragments. ce fichier sera en format Key 
 // value avec le signe ":" séparant les deux parties. il sera édité pendant 
 // la phase de création et de suppression des fragments.
+
 

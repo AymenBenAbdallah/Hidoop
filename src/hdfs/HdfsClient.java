@@ -3,6 +3,7 @@ package hdfs;
 import java.io.*;
 import java.net.Socket;
 import formats.Format;
+import formats.Format.Type;
 import formats.KV;
 import formats.KVFormat;
 import formats.LineFormat;
@@ -54,7 +55,7 @@ public class HdfsClient {
             
             // créer les constantes du problème.
             
-            String fragment;
+            String fragment = "";
             int index ;
             KV buffer = new KV();
             
@@ -65,7 +66,7 @@ public class HdfsClient {
         	
         	// vérifier que la taille du bloc est un diviseur de la taille totale sinon ajouter 1.
         	
-        	int nbfragments = taille/taille_fragment;
+        	int nbfragments = (int) (taille/taille_fragment);
         	if (taille%taille_fragment != 0) { nbfragments ++;}
             
         	// ajouter le nombre de fragments dans le fichier node.
@@ -92,7 +93,7 @@ public class HdfsClient {
                     while (index < taille_fragment && buffer != null){
                         buffer = fichier.read();
                         fragment = fragment + buffer.v;
-                        index = fichier.getIndex()-i*nbfragments;
+                        index = (int) (fichier.getIndex()-i*nbfragments);
                     }
                     
                     int t = i%nbServers;
@@ -104,7 +105,7 @@ public class HdfsClient {
                     socket.close();
                 }
                 fichier.close();
-            }else if (fmt == formats.Type.KV){
+            }else if (fmt == Type.KV){
             
             KVFormat fichier = new KVFormat(localFSSourceFname);
             fichier.open(Format.OpenMode.R);
@@ -112,10 +113,11 @@ public class HdfsClient {
             for (int i=0; i < nbfragments ; i++){
                 index = 0;
                 buffer =  cst;
-                while (index < taillebloc && buffer != null){
+                
+                while (index < taille_fragment && buffer != null){
                     buffer = fichier.read();
                     fragment = fragment + buffer.v;
-                    index = fichier.getIndex()-i*nbfragments;
+                    index = (int) (fichier.getIndex()-i*nbfragments);
                 }
                 // il se trouve nécessaire de réinitialiser le buffer à une valeur non nulle du fait que
                 // la condition d'entrer dans la boucle while est que buffer != null

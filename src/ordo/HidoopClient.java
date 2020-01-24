@@ -148,7 +148,7 @@ public class HidoopClient {
 			e.printStackTrace();
 			
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			e.printStackTrace();	
 		}
 	}
 

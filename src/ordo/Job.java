@@ -10,7 +10,12 @@ import formats.Format;
 import formats.Format.Type;
 import formats.KVFormat;
 import formats.LineFormat;
+import hdfs.Namenode;
 import map.MapReduce;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.ObjectInputStream;
 
 public class Job implements JobInterface {
 	
@@ -39,26 +44,28 @@ public class Job implements JobInterface {
 	}
 	
 	// Récupérer le nombre de fragments du fichier HDFS
-	// via le fichier node (couple "nom:nbFragments" à chaque ligne)
+	// via le fichier node (objet avec un attribut hashmap)
 	private static int recupNode(String fname) {
-		String nom_node = "../config/node";
+		String filepath = "../config/node.txt";
 		int res = 0;
 		
-		BufferedReader br;
+		// Flux d'écriture depuis un fichier (node.txt)
+		FileInputStream fis;
 		try {
-			br = new BufferedReader(new FileReader(nom_node));
-			String st; 
-			while ((st = br.readLine()) != null) {
-				// lecture de la ligne et séparation
-				String[] parts = st.split(":");
-				// parts[0] = nom du fichier; parts[1] = nombre de fragments
-				if (parts[0].contentEquals(fname)) {
-					res = Integer.parseInt(parts[1]);
-				}
-			}
-		} catch (IOException e) {
+			fis = new FileInputStream(filepath);
+			// Lecture d'un objet depuis le flux précédent
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			
+			// Récupérer l'objet Namenode
+			Namenode node = (Namenode) ois.readObject();
+			
+			// Récupérer le nombre de fragments du fichier
+			res = node.getNbFragments(fname);
+			
+		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
-		}
+		} 
+		
 		return res;
 	}
 	
@@ -81,7 +88,8 @@ public class Job implements JobInterface {
 		Format writer;
 		
 		// nombre de fragments du fichier
-		int nbFragments = recupNode(this.InputFname);
+		int nbFragments;
+		nbFragments = recupNode(this.InputFname);
 		
 		// appliquer le traitement sur tous les fragments :
 		// s'il n'y a qu'un fragment :

@@ -7,9 +7,9 @@
 # Entrez votre identifiant INP
 id="ssabras"
 
-# Arrêter les démons sur les machines distantes
-ssh ${id}@vador ps -ef | grep java | grep -v grep | awk '{print $2}' | xargs kill
-ssh ${id}@leia ps -ef | grep java | grep -v grep | awk '{print $2}' | xargs kill
-ssh ${id}@luke ps -ef | grep java | grep -v grep | awk '{print $2}' | xargs kill
-ssh ${id}@yoda ps -ef | grep java | grep -v grep | awk '{print $2}' | xargs kill
-ssh ${id}@solo ps -ef | grep java | grep -v grep | awk '{print $2}' | xargs kill
+# Arrêter les démons hidoop sur les machines distantes
+ssh ${id}@vador jps | grep DaemonImpl | awk '{print $1}' | xargs kill
+ssh ${id}@leia jps | grep DaemonImpl | awk '{print $1}' | xargs kill
+ssh ${id}@luke jps | grep DaemonImpl | awk '{print $1}' | xargs kill
+ssh ${id}@yoda jps | grep DaemonImpl | awk '{print $1}' | xargs kill
+ssh ${id}@solo jps | grep DaemonImpl | awk '{print $1}' | xargs kill

@@ -22,7 +22,8 @@ javac -d bin src/**/*.java
 #java -cp bin ordo.DaemonImpl //localhost:7193/khalil 7193 &
 
 # S'il faut générer les clés
-if [ $gen_cles ]; then
+if [ "$gen_cles" = true ]
+then
 	# Génération des clés publiques
 	ssh-keygen -t  rsa
 
@@ -35,8 +36,8 @@ if [ $gen_cles ]; then
 fi
 
 # Lancer les démons sur les machines distantes
-ssh ${id}@vador java -cp bin ordo.DaemonImpl //localhost:7654/ali 7654 &
-ssh ${id}@leia java -cp bin ordo.DaemonImpl //localhost:7650/aymen 7650 &
-ssh ${id}@luke java -cp bin ordo.DaemonImpl //localhost:3478/luc 3478 &
-ssh ${id}@yoda java -cp bin ordo.DaemonImpl //localhost:5481/sherwin 5481 &
-ssh ${id}@solo java -cp bin ordo.DaemonImpl //localhost:7193/khalil 7193 &
+ssh ${id}@vador java -cp eclipse-workspace/Hidoop/bin ordo.DaemonImpl //localhost:7654/ali 7654 &
+ssh ${id}@leia java -cp eclipse-workspace/Hidoop/bin ordo.DaemonImpl //localhost:7650/aymen 7650 &
+ssh ${id}@luke java -cp eclipse-workspace/Hidoop/bin ordo.DaemonImpl //localhost:3478/luc 3478 &
+ssh ${id}@yoda java -cp eclipse-workspace/Hidoop/bin ordo.DaemonImpl //localhost:5481/sherwin 5481 &
+ssh ${id}@solo java -cp eclipse-workspace/Hidoop/bin ordo.DaemonImpl //localhost:7193/khalil 7193 &

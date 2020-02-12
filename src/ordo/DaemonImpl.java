@@ -19,10 +19,11 @@ public class DaemonImpl extends UnicastRemoteObject implements Daemon {
 	
 	// emplacement et port du service
 	static String url;
+	static String hostname;
 	static int port;
 	
 	private static void usage() {
-		System.out.println("Utilisation : java DaemonImpl url port");
+		System.out.println("Utilisation : java DaemonImpl port");
 	}
 
 	public void runMap(Mapper m, Format reader, Format writer, CallBack cb) throws RemoteException {
@@ -36,16 +37,18 @@ public class DaemonImpl extends UnicastRemoteObject implements Daemon {
 		
 		// vérifier le bon usage du daemon
 		try {
-			if (args.length < 2) {
+			if (args.length < 1) {
 				usage();
 				System.exit(1);
 			}
 			
-			url = args[0];
-			port = Integer.parseInt(args[1]);
+			port = Integer.parseInt(args[0]);
+			hostname = "0.0.0.0";
 			
 			// Création du serveur de noms sur le port indiqué
 			registre = LocateRegistry.createRegistry(port);
+			
+			url = "//" + hostname + ":" + port + "/Daemon";
 			
 			// Inscription auprès du registre
 			Naming.bind(url, new DaemonImpl());

@@ -28,22 +28,60 @@ public class HidoopClient {
 		System.out.println("Utilisation : java HidoopClient fichier format");
 	}
 	
+	private static void usage_config() {
+		System.out.println("Utilisation du fichier de configuration :"
+				+ "L1 : machine1,machine2"
+				+ "L2 : port_hdfs1,port_hdfs2"
+				+ "L3 : ports registres RMI"
+				+ "L4 : taille");
+	}
+	
 	// récupérer les emplacements indiqués dans le fichier de configuration
-	private static void recupURL(String[] urls) {
+	private static String[] recupURL() {
 		File file = new File("../config/config_hidoop.cfg");
 		int cpt = 0;
+		int nbMachines = 4;
+		
+		String[] ports = new String[nbMachines];
+		String[] noms = new String[nbMachines];
+		String[] urls = new String[nbMachines];
 		  
 		BufferedReader br;
 		try {
 			br = new BufferedReader(new FileReader(file));
 			String st; 
-			while ((st = br.readLine()) != null)
-				urls[cpt] = st;
-				cpt++;
+			while ((st = br.readLine()) != null) {
+			  // si la ligne n'est pas un commentaire
+			  if (!st.startsWith("#")) {
+				  // noms des machines
+				  if (cpt == 0) {
+					  noms = st.split(",");
+				  }
+				  // ports RMI
+				  if (cpt == 2) {
+					  ports = st.split(",");
+				  }
+				  cpt++;					  
+			  }
+			}
 			
+			br.close();
+			
+			// si le fichier de configuration est correct
+			if (noms.length != 0 && ports.length == noms.length) {
+				for (int i=0 ; i < noms.length ; i++) {
+					urls[i] = "//" + noms[i] + ":" + ports[i] + "/Daemon";
+				}
+			} else {
+				usage_config();
+			}
+									
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		return urls;
+
 	}
 	
 
@@ -96,8 +134,7 @@ public class HidoopClient {
 			}
 			
 			// récupérer les URLs depuis le fichier de configuration 
-			urlDaemon = new String[nbCluster];			
-			recupURL(urlDaemon);
+			urlDaemon = recupURL();
 
 			// récupérer les références des objets Daemon distants
 			// à l'aide des url (déjà connues)

@@ -4,8 +4,8 @@
 ###################### CONFIGURATION ##########################
 ###############################################################
 
-# Entrez votre identifiant INP
-id="ssabras"
+# Chemin d'accès vers le projet Hidoop
+chemin="~/Travail/2A/Hidoop_git/Hidoop/"
 
 # Faut-il générer les clés publiques ? Pas besoin si ça a déjà été fait !
 gen_cles=false # < false | true >
@@ -14,13 +14,6 @@ gen_cles=false # < false | true >
 # Compiler les fichiers du projet
 javac -d bin src/**/*.java
 
-# Lancer les démons localement (en arrière-plan)
-#java -cp bin ordo.DaemonImpl //localhost:7654/ali 7654 &
-#java -cp bin ordo.DaemonImpl //localhost:7650/aymen 7650 &
-#java -cp bin ordo.DaemonImpl //localhost:3478/luc 3478 &
-#java -cp bin ordo.DaemonImpl //localhost:5481/sherwin 5481 &
-#java -cp bin ordo.DaemonImpl //localhost:7193/khalil 7193 &
-
 # S'il faut générer les clés
 if [ "$gen_cles" = true ]
 then
@@ -28,16 +21,21 @@ then
 	ssh-keygen -t  rsa
 
 	# Envoyer la clé publique sur les machines du cluster
-	ssh-copy-id ${id}@vador
-	ssh-copy-id ${id}@leia
-	ssh-copy-id ${id}@luke
-	ssh-copy-id ${id}@yoda
-	ssh-copy-id ${id}@solo
+	ssh-copy-id vador
+	ssh-copy-id leia
+	ssh-copy-id tao
+	ssh-copy-id goldorak
 fi
 
 # Lancer les démons sur les machines distantes
-ssh ${id}@vador java -cp eclipse-workspace/Hidoop/bin ordo.DaemonImpl //localhost:7654/ali 7654 &
-ssh ${id}@leia java -cp eclipse-workspace/Hidoop/bin ordo.DaemonImpl //localhost:7650/aymen 7650 &
-ssh ${id}@luke java -cp eclipse-workspace/Hidoop/bin ordo.DaemonImpl //localhost:3478/luc 3478 &
-ssh ${id}@yoda java -cp eclipse-workspace/Hidoop/bin ordo.DaemonImpl //localhost:5481/sherwin 5481 &
-ssh ${id}@solo java -cp eclipse-workspace/Hidoop/bin ordo.DaemonImpl //localhost:7193/khalil 7193 &
+ssh vador fuser -k 1100/tcp
+ssh vador java -cp ${chemin}/bin ordo.DaemonImpl 1100 &
+
+ssh leia fuser -k 1200/tcp
+ssh leia java -cp ${chemin}/bin ordo.DaemonImpl 1200 &
+
+ssh tao fuser -k 1300/tcp
+ssh tao java -cp ${chemin}/bin ordo.DaemonImpl 1300 &
+
+ssh goldorak fuser -k 1400/tcp
+ssh goldorak java -cp ${chemin}/bin ordo.DaemonImpl 1400 &

@@ -69,7 +69,7 @@ public class HidoopClient {
 			
 			// si le fichier de configuration est correct
 			if (noms.length != 0 && ports.length == noms.length) {
-				for (int i=0 ; i < noms.length ; i++) {
+				for (int i=0 ; i < nbMachines ; i++) {
 					urls[i] = "//" + noms[i] + ":" + ports[i] + "/Daemon";
 				}
 			} else {

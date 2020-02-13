@@ -39,3 +39,5 @@ ssh tao java -cp ${chemin}/bin ordo.DaemonImpl 1300 &
 
 ssh goldorak fuser -k 1400/tcp
 ssh goldorak java -cp ${chemin}/bin ordo.DaemonImpl 1400 &
+
+java -cp bin ordo.HidoopClient data/filesample.txt line

@@ -12,7 +12,7 @@
 #java -cp bin hdfs.HdfsServer 3400 //localhost:3400 &
 
 # Chemin d'accès vers le projet Hidoop
-chemin="~/Téléchargements/Hidoop-master"
+chemin="~/Travail/2A/Hidoop_git/Hidoop/"
 
 # Faut-il générer les clés publiques ? Pas besoin si ça a déjà été fait !
 gen_cles=false # < false | true >
@@ -56,11 +56,11 @@ ssh vador java -cp ${chemin}/bin hdfs.HdfsServer 3100 &
 ssh leia fuser -k 3200/tcp
 ssh leia java -cp ${chemin}/bin hdfs.HdfsServer 3200 &
 
-ssh luke fuser -k 3300/tcp 
-ssh luke java -cp ${chemin}/bin hdfs.HdfsServer 3300 &
+ssh tao fuser -k 3600/tcp 
+ssh tao java -cp ${chemin}/bin hdfs.HdfsServer 3600 &
 
-ssh yoda fuser -k 3000/tcp 
-ssh yoda java -cp ${chemin}/bin hdfs.HdfsServer 3000 &
+ssh goldorak fuser -k 3400/tcp 
+ssh goldorak java -cp ${chemin}/bin hdfs.HdfsServer 3400 &
 
 
 #ssh dragon fuser -k 3400/tcp 

@@ -1,0 +1,25 @@
+Rapport partie Hidoop
+
+Travail réalisé :
+   
+    Nous avons créé la classe HidoopClient qui contient une déclaration des variables nécessaires (le nom du fichier écrit sur HDFS via HDFSClient, le nom du fichier traité local, le nombre de machines contenues dans le cluster, etc...). On initialise les objets utiles : Registre, MapReduce et Job. Nous avons introduit une liste (urlDaemon) qui contient les url reliées aux démons des machines du cluster.
+    Dans un try-catch on initialise les variables puis on crée le registre sur le port indiqué. On fait ensuite un Naming.lookup
+ sur chacun des url des démons (de chaque machine du cluster).On crée une instance des objets Job et MapReduce. 
+ On lance un startJob, on attend que toutes les tâches soient terminées, on récupère le fichier qui vient d'être traité avec reduce (à l'aide de HdfsRead).
+     
+    Nous avons également créé l'interface CallBack, implémentée par la classe Job. Job contient une méthode qui permet d'incrémenter le nombre de machines du cluster qui ont terminé leur traitement. Une fois que le nombre de machines pour lesquelles le travail est terminé atteint celui du nombre de machine de la grappe, le client est prévenu que le traitement réparti est achevé.
+    
+    De plus, nous avons complété la classe Job et plus spécifiquement startJob qui applique le runMap sur chaque machine du cluster à l'aide des éléments nécessaires (reader, writer...).
+    
+    Enfin, la classe DaemonImpl implémente la classe Daemon : runMap lance la méthode map et rappelle Callback pour prévenir que la tâche est terminée (à compléter avec la partie Hdfs).
+    Dans le Main, la machine ajoute son url au registre (avec rebind).
+    
+    Il nous reste à connecter notre partie avec HDFS, et résoudre les problèmes potentiels liés à RMI.
+    
+    
+    
+    
+    
+    
+
+

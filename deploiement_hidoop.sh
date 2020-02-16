@@ -28,16 +28,10 @@ then
 fi
 
 # Lancer les démons sur les machines distantes
-ssh vador fuser -k 1100/tcp
 ssh vador java -cp ${chemin}/bin ordo.DaemonImpl 1100 &
-
-ssh leia fuser -k 1200/tcp
-ssh leia java -cp ${chemin}/bin ordo.DaemonImpl 1200 &
-
-ssh tao fuser -k 1300/tcp
 ssh tao java -cp ${chemin}/bin ordo.DaemonImpl 1300 &
-
-ssh goldorak fuser -k 1400/tcp
 ssh goldorak java -cp ${chemin}/bin ordo.DaemonImpl 1400 &
+
+sleep 5
 
 java -cp bin ordo.HidoopClient data/filesample.txt line

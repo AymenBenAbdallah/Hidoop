@@ -33,7 +33,7 @@ public class DaemonImpl extends UnicastRemoteObject implements Daemon {
 		cb.tacheFinie();
 	}
 
-	public static void main (String args[]) throws RemoteException {
+	public static void main (String args[]) {
 		
 		// vérifier le bon usage du daemon
 		try {
@@ -43,20 +43,30 @@ public class DaemonImpl extends UnicastRemoteObject implements Daemon {
 			}
 			
 			port = Integer.parseInt(args[0]);
-			hostname = "0.0.0.0";
+			hostname = "localhost";
 			
 			// Création du serveur de noms sur le port indiqué
-			registre = LocateRegistry.createRegistry(port);
+			try {
+				registre = LocateRegistry.createRegistry(port);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			
 			url = "//" + hostname + ":" + port + "/Daemon";
+			System.out.println(url);
 			
 			// Inscription auprès du registre
 			Naming.bind(url, new DaemonImpl());
+			System.out.println("Bind daemon réussi");
 			
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 			
 		} catch (AlreadyBoundException e) {
+			e.printStackTrace();
+			
+		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
 	}

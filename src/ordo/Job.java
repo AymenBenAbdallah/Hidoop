@@ -1,7 +1,7 @@
 package ordo;
 
 import java.io.BufferedReader;
-
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -46,7 +46,8 @@ public class Job implements JobInterface {
 	// Récupérer le nombre de fragments du fichier HDFS
 	// via le fichier node (objet avec un attribut hashmap)
 	private static int recupNode(String fname) {
-		String filepath = "../config/node.txt";
+		String filepath = "src/config/config_hidoop.cfg";
+		
 		int res = 0;
 		
 		// Flux d'écriture depuis un fichier (node.txt)

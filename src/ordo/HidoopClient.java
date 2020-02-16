@@ -38,9 +38,11 @@ public class HidoopClient {
 	
 	// récupérer les emplacements indiqués dans le fichier de configuration
 	private static String[] recupURL() {
-		File file = new File("../config/config_hidoop.cfg");
+		String path = "src/config/config_hidoop.cfg";
+		
+		File file = new File(path);
 		int cpt = 0;
-		int nbMachines = 4;
+		int nbMachines = 3;
 		
 		String[] ports = new String[nbMachines];
 		String[] noms = new String[nbMachines];
@@ -71,6 +73,7 @@ public class HidoopClient {
 			if (noms.length != 0 && ports.length == noms.length) {
 				for (int i=0 ; i < nbMachines ; i++) {
 					urls[i] = "//" + noms[i] + ":" + ports[i] + "/Daemon";
+					System.out.println(urls[i]);
 				}
 			} else {
 				usage_config();
@@ -95,7 +98,7 @@ public class HidoopClient {
 		FormatWriter writer;
 		
 		// nombre de machines contenues dans le cluster
-		int nbCluster = 5;
+		int nbCluster = 3;
 		
 		// informations de format de fichier
 		Type ft;
@@ -140,7 +143,7 @@ public class HidoopClient {
 			// à l'aide des url (déjà connues)
 			listeDaemon = new Daemon[nbCluster];
 			
-			for (int i = 0 ; i < nbCluster ; i++) { 
+			for (int i = 0 ; i < nbCluster ; i++) {
 				listeDaemon[i]=(Daemon) Naming.lookup(urlDaemon[i]);
 			}
 			
@@ -178,14 +181,14 @@ public class HidoopClient {
 		} catch (RemoteException e) {
 			e.printStackTrace();
 			
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			
 		} catch (NotBoundException e) {
 			e.printStackTrace();
 			
 		} catch (InterruptedException e) {
 			e.printStackTrace();	
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

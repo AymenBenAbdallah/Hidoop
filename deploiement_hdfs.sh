@@ -13,7 +13,7 @@
 #java -cp bin hdfs.HdfsServer 3300 //localhost:3300 &
 #java -cp bin hdfs.HdfsServer 3400 //localhost:3400 &
 
-chemin = "~/Téléchargements/Hidoopgit"
+chemin="~/Téléchargements/Hidoopgit"
 # Entrez votre identifiant INP
 id="aaitbela"
 

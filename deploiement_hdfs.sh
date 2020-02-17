@@ -13,9 +13,8 @@
 #java -cp bin hdfs.HdfsServer 3300 //localhost:3300 &
 #java -cp bin hdfs.HdfsServer 3400 //localhost:3400 &
 
-chemin="~/Téléchargements/Hidoopgit"
+chemin="~/Travail/2A/Hidoop_git/Hidoop"
 # Entrez votre identifiant INP
-id="aaitbela"
 
 # Faut-il générer les clés publiques ? Pas besoin si ça a déjà été fait !
 gen_cles=false # < false | true >
@@ -60,17 +59,17 @@ ssh goldorak  "kill \$(jps | grep HdfsServer | awk '{print \$1}')"
 
 # Lancer les démons sur les machines distantes
 
-ssh ${id}@vador fuser -k 3158/tcp
-ssh ${id}@vador java -cp ${chemin}/bin hdfs.HdfsServer 3158 &
+ssh vador fuser -k 3158/tcp
+ssh vador java -cp ${chemin}/bin hdfs.HdfsServer 3158 &
 
-ssh ${id}@leia fuser -k 3292/tcp
-ssh ${id}@leia java -cp ${chemin}/bin hdfs.HdfsServer 3292 &
+ssh leia fuser -k 3292/tcp
+ssh leia java -cp ${chemin}/bin hdfs.HdfsServer 3292 &
 
-ssh ${id}@tao fuser -k 3692/tcp
-ssh ${id}@tao java -cp ${chemin}/bin hdfs.HdfsServer 3692 &
+ssh tao fuser -k 3692/tcp
+ssh tao java -cp ${chemin}/bin hdfs.HdfsServer 3692 &
 
-ssh ${id}@goldorak fuser -k 3434/tcp
-ssh ${id}@goldorak java -cp ${chemin}/bin hdfs.HdfsServer 3434 &
+ssh goldorak fuser -k 3434/tcp
+ssh goldorak java -cp ${chemin}/bin hdfs.HdfsServer 3434 &
 
 #ssh ${id}@sodium fuser -k 3000/tcp 
 #ssh ${id}@sodium java -cp ~/Téléchargements/Hidoop-master/bin hdfs.HdfsServer 3000 &
@@ -80,5 +79,4 @@ sleep 0.5
 java -cp bin hdfs.HdfsClient write line filesample.txt
 #java -cp bin hdfs.HdfsClient delete data/filesample.txt
 #java -cp bin hdfs.HdfsClient read data/filesample.txt
-
 

@@ -10,7 +10,7 @@ import formats.LineFormat;
 
 public class HdfsClient {
 
-    private static int numPorts[] = {3100, 3200, 3600, 3400, 3300, 3000};
+    private static int numPorts[] = {3158, 3292, 3692, 3434, 3300, 3000};
     private static String nomMachines[] = {"vador", "leia", "tao", "goldorak", "luke", "sodium"};
     final static int nbServers = 4;
     private static long taille_fragment = 200;
@@ -64,7 +64,7 @@ public class HdfsClient {
             
             // calculer la taille du fichier
             
-        	File file = new File(localFSSourceFname);
+        	File file = new File("data/"+localFSSourceFname);
         	long taille = file.length();
         	System.out.println(String.valueOf(taille));
         	// vérifier que la taille du bloc est un diviseur de la taille totale sinon ajouter 1.
@@ -83,7 +83,7 @@ public class HdfsClient {
             if (fmt == Type.LINE){
             	
             	
-                LineFormat fichier = new LineFormat(localFSSourceFname);
+                LineFormat fichier = new LineFormat("data/" + localFSSourceFname);
                 fichier.open(Format.OpenMode.R);
                 
                 for (int i=0; i < nbfragments; i++){

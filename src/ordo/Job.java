@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.HashMap;
 
 import formats.Format;
 import formats.Format.Type;
@@ -46,19 +47,13 @@ public class Job implements JobInterface {
 	// Récupérer le nombre de fragments du fichier HDFS
 	// via le fichier node (objet avec un attribut hashmap)
 	private static int recupNode(String fname) {
-		String filepath = "src/config/config_hidoop.cfg";
 		
 		int res = 0;
 		
 		// Flux d'écriture depuis un fichier (node.txt)
-		FileInputStream fis;
 		try {
-			fis = new FileInputStream(filepath);
-			// Lecture d'un objet depuis le flux précédent
-			ObjectInputStream ois = new ObjectInputStream(fis);
-			
 			// Récupérer l'objet Namenode
-			Namenode node = (Namenode) ois.readObject();
+			Namenode node = new Namenode();
 			
 			// Récupérer le nombre de fragments du fichier
 			res = node.getNbFragments(fname);
@@ -90,6 +85,8 @@ public class Job implements JobInterface {
 		
 		// nombre de fragments du fichier
 		int nbFragments;
+		System.out.println("test affichage");
+		System.out.println(this.InputFname);
 		nbFragments = recupNode(this.InputFname);
 		
 		// appliquer le traitement sur tous les fragments :

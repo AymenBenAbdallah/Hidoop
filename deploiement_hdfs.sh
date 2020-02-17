@@ -13,7 +13,7 @@
 #java -cp bin hdfs.HdfsServer 3300 //localhost:3300 &
 #java -cp bin hdfs.HdfsServer 3400 //localhost:3400 &
 
-chemin="~/Travail/2A/Hidoop_git/Hidoop"
+chemin="~/2ASR/Hidoop"
 # Entrez votre identifiant INP
 
 # Faut-il générer les clés publiques ? Pas besoin si ça a déjà été fait !
@@ -52,23 +52,23 @@ fi
 #ssh ${id}@yoda fuser -k 3300/tcp
 #ssh ${id}@solo fuser -k 3400/tcp
 
-ssh vador "kill \$(jps | grep HdfsServer | awk '{print \$1}')"
-ssh leia  "kill \$(jps | grep HdfsServer | awk '{print \$1}')"
-ssh tao  "kill \$(jps | grep HdfsServer | awk '{print \$1}')"
-ssh goldorak  "kill \$(jps | grep HdfsServer | awk '{print \$1}')"
+#ssh vador "kill \$(jps | grep HdfsServer | awk '{print \$1}')"
+#ssh leia  "kill \$(jps | grep HdfsServer | awk '{print \$1}')"
+#ssh pikachu  "kill \$(jps | grep HdfsServer | awk '{print \$1}')"
+#ssh goldorak  "kill \$(jps | grep HdfsServer | awk '{print \$1}')"
 
 # Lancer les démons sur les machines distantes
 
-ssh vador fuser -k 3158/tcp
+#ssh vador fuser -k 3158/tcp
 ssh vador java -cp ${chemin}/bin hdfs.HdfsServer 3158 &
 
-ssh leia fuser -k 3292/tcp
+#ssh leia fuser -k 3292/tcp
 ssh leia java -cp ${chemin}/bin hdfs.HdfsServer 3292 &
 
-ssh tao fuser -k 3692/tcp
-ssh tao java -cp ${chemin}/bin hdfs.HdfsServer 3692 &
+#ssh pikachu fuser -k 3692/tcp
+ssh pikachu java -cp ${chemin}/bin hdfs.HdfsServer 3692 &
 
-ssh goldorak fuser -k 3434/tcp
+#ssh goldorak fuser -k 3434/tcp
 ssh goldorak java -cp ${chemin}/bin hdfs.HdfsServer 3434 &
 
 #ssh ${id}@sodium fuser -k 3000/tcp 
@@ -76,7 +76,7 @@ ssh goldorak java -cp ${chemin}/bin hdfs.HdfsServer 3434 &
 
 #lancer le client
 sleep 0.5
-java -cp bin hdfs.HdfsClient write line filesample.txt
+#java -cp bin hdfs.HdfsClient write line filesample.txt
 #java -cp bin hdfs.HdfsClient delete data/filesample.txt
-#java -cp bin hdfs.HdfsClient read data/filesample.txt
+java -cp bin hdfs.HdfsClient read data/filesample.txt
 

@@ -11,7 +11,7 @@ import formats.LineFormat;
 public class HdfsClient {
 
     private static int numPorts[] = {3158, 3292, 3692, 3434, 3300, 3000};
-    private static String nomMachines[] = {"vador", "leia", "tao", "goldorak", "luke", "sodium"};
+    private static String nomMachines[] = {"vador", "leia", "pikachu", "goldorak", "luke", "sodium"};
     final static int nbServers = 4;
     private static long taille_fragment = 200;
     private static KV cst = new KV("hi","hello");
@@ -157,7 +157,7 @@ public class HdfsClient {
     }
 
     public static void HdfsRead(String hdfsFname, String localFSDestFname) {      
-        File file = new File("data/hiiiiiiiii");
+        File file = new File("data/filesample.txt");
         try {
         	int j;
             FileWriter fWrite = new FileWriter(file);

@@ -60,13 +60,13 @@ fi
 # Lancer les démons sur les machines distantes
 
 #ssh vador fuser -k 3158/tcp
-ssh vador java -cp ${chemin}/bin hdfs.HdfsServer 3158 &
+ssh sodium java -cp ${chemin}/bin hdfs.HdfsServer 3158 &
 
 #ssh leia fuser -k 3292/tcp
 ssh leia java -cp ${chemin}/bin hdfs.HdfsServer 3292 &
 
 #ssh pikachu fuser -k 3692/tcp
-ssh pikachu java -cp ${chemin}/bin hdfs.HdfsServer 3692 &
+ssh tao java -cp ${chemin}/bin hdfs.HdfsServer 3692 &
 
 #ssh goldorak fuser -k 3434/tcp
 ssh goldorak java -cp ${chemin}/bin hdfs.HdfsServer 3434 &

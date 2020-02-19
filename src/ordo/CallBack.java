@@ -1,9 +1,11 @@
 package ordo;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.util.concurrent.Semaphore;
 
-public interface CallBack {
-	public void tacheFinie();
+public interface CallBack extends Remote {
+	public void tacheFinie() throws RemoteException;
 
-	public Semaphore getFinTache();
+	public Semaphore getFinTache() throws RemoteException;
 }

@@ -41,7 +41,7 @@ public class Job implements JobInterface {
 		this.InputFname = null;
 		this.listeDaemon = HidoopClient.listeDaemon;		
 		this.nbDaemons = listeDaemon.length;
-		this.cb = new CallBackImpl(recupNode(this.InputFname));
+		this.cb = null;
 	}
 	
 	// Récupérer le nombre de fragments du fichier HDFS
@@ -83,18 +83,29 @@ public class Job implements JobInterface {
 		String fdest;
 		Format writer;
 		
+		String[] nomExt = this.InputFname.split("\\.");
+
 		// nombre de fragments du fichier
 		int nbFragments;
-		System.out.println("test affichage");
 		System.out.println(this.InputFname);
 		nbFragments = recupNode(this.InputFname);
+		try {
+			this.cb = new CallBackImpl(recupNode(this.InputFname));
+		} catch (RemoteException e1) {
+			e1.printStackTrace();
+		}
+		
+		// chemin d'accès sur la machine
+		String path = "/tmp/";
 		
 		// appliquer le traitement sur tous les fragments :
 		// s'il n'y a qu'un fragment :
 		try {
 		if (nbFragments == 1) {
 			// on met le suffixe "_1" pour le premier fragment
-			fsce = this.InputFname + "_1";
+
+			fsce = path + nomExt[0] + "_1" + "." + nomExt[1];
+			nomExt = fsce.split("\\.");
 
 			fdest = fsce + "-res";
 			
@@ -107,11 +118,15 @@ public class Job implements JobInterface {
 		} else {
 			for (int i = 0 ; i < nbFragments; i++) {
 					// format des noms de fragments : "<nom fichier HDFS>_< n° fragment >"
-					fsce = this.InputFname + "_" + (i+1);
+					fsce = path + nomExt[0] + "_" + i + "." + nomExt[1];
+
 					// fragment destination : ajouter le suffixe "-res";
-					fdest = fsce + "-res";
+					fdest = path + nomExt[0] + "_" + i + "-res" + "." + nomExt[1];
+					
+					System.out.println("fsce : " + fsce);
+					System.out.println("fdest : " + fdest);
 	
-					reader = new LineFormat(fsce);
+					reader = new KVFormat(fsce);
 					writer = new KVFormat(fdest);
 					
 					// compteur : si on atteint la fin de la liste de démons,

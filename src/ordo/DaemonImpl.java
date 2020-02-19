@@ -54,11 +54,10 @@ public class DaemonImpl extends UnicastRemoteObject implements Daemon {
 			}
 			
 			url = "//" + hostname + ":" + port + "/Daemon";
-			System.out.println(url);
 			
 			// Inscription auprès du registre
 			Naming.bind(url, new DaemonImpl());
-			System.out.println("Bind daemon réussi");
+			// System.out.println("Bind daemon réussi");
 			
 		} catch (MalformedURLException e) {
 			e.printStackTrace();

@@ -33,6 +33,6 @@ ssh leia java -cp ${chemin}/bin ordo.DaemonImpl 1200 &
 ssh tao java -cp ${chemin}/bin ordo.DaemonImpl 1300 &
 ssh goldorak java -cp ${chemin}/bin ordo.DaemonImpl 1400 &
 
-sleep 5
+sleep 3
 
 java -cp bin ordo.HidoopClient data/filesample.txt line

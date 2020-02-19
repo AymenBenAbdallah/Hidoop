@@ -123,12 +123,15 @@ public class HidoopClient {
 			
 			// fichier HDFS destination  : ajout du suffixe "-res"
 			// Nom du fichier traité avnt application du reduce
-			String localFSDestFname = hdfsFname + "-res";
+			String[] nomExt = hdfsFname.split("\\.");
+			String localFSDestFname = nomExt[0] + "-res" + "." + nomExt[1];
+			System.out.println(localFSDestFname);
 			
 			// fichier résultat du reduce : ajout du suffixe "-red"
 			// Nom du fichier traité après application du reduce
-			String reduceDestFname = hdfsFname + "-red";
-			
+			String reduceDestFname = nomExt[0] + "-red" + "." + nomExt[1];
+			System.out.println(reduceDestFname);
+
 			// Récupérer le format de fichier indiqué en argument
 			if (args[1].equals("line")) {
 				ft = Format.Type.LINE;
@@ -187,7 +190,6 @@ public class HidoopClient {
 		} catch (InterruptedException e) {
 			e.printStackTrace();	
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

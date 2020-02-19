@@ -8,6 +8,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 import formats.Format;
+import formats.Format.OpenMode;
 import map.Mapper;
 
 public class DaemonImpl extends UnicastRemoteObject implements Daemon {
@@ -27,10 +28,19 @@ public class DaemonImpl extends UnicastRemoteObject implements Daemon {
 	}
 
 	public void runMap(Mapper m, Format reader, Format writer, CallBack cb) throws RemoteException {
+		OpenMode modeR = Format.OpenMode.R;
+		OpenMode modeW = Format.OpenMode.W;
+
 		// Lancer la fonction map sur le fragment de fichier
+		reader.open(modeR);
+		writer.open(modeW);
+		
 		m.map(reader, writer);
 		// Utiliser Callback pour prévenir que le traitement est terminé
 		cb.tacheFinie();
+		
+		reader.close();
+		writer.close();
 	}
 
 	public static void main (String args[]) {
@@ -57,7 +67,6 @@ public class DaemonImpl extends UnicastRemoteObject implements Daemon {
 			
 			// Inscription auprès du registre
 			Naming.bind(url, new DaemonImpl());
-			// System.out.println("Bind daemon réussi");
 			
 		} catch (MalformedURLException e) {
 			e.printStackTrace();

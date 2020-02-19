@@ -11,7 +11,7 @@ import formats.LineFormat;
 public class HdfsClient {
 
     private static int numPorts[] = {3158, 3292, 3692, 3434, 3300, 3000};
-    private static String nomMachines[] = {"vador", "leia", "pikachu", "goldorak", "luke", "sodium"};
+    private static String nomMachines[] = {"sodium", "leia", "tao", "goldorak", "luke", "vador"};
     final static int nbServers = 4;
     private static long taille_fragment = 200;
     private static KV cst = new KV("hi","hello");
@@ -21,6 +21,65 @@ public class HdfsClient {
         System.out.println("Usage: java HdfsClient write <line|kv> <file>");
         System.out.println("Usage: java HdfsClient delete <file>");
     }
+
+	private static void usage_config() {
+		System.out.println("Utilisation du fichier de configuration :"
+				+ "L1 : machine1,machine2"
+				+ "L2 : port_hdfs1,port_hdfs2"
+				+ "L3 : ports registres RMI"
+				+ "L4 : taille");
+	}
+	
+	// récupérer les emplacements indiqués dans le fichier de configuration
+	private static String[] recupport() {
+		String path = "src/config/config_hidoop.cfg";
+		
+		File file = new File(path);
+		int cpt = 0;
+		int nbMachines = 3;
+		
+		String[] ports = new String[nbMachines];
+		String[] noms = new String[nbMachines];
+		String[] urls = new String[nbMachines];
+		  
+		BufferedReader br;
+		try {
+			br = new BufferedReader(new FileReader(file));
+			String st; 
+			while ((st = br.readLine()) != null) {
+			  // si la ligne n'est pas un commentaire
+			  if (!st.startsWith("#")) {
+				  // noms des machines
+				  if (cpt == 0) {
+					  noms = st.split(",");
+				  }
+				  // ports RMI
+				  if (cpt == 2) {
+					  ports = st.split(",");
+				  }
+				  cpt++;					  
+			  }
+			}
+			
+			br.close();
+			
+			// si le fichier de configuration est correct
+			if (noms.length != 0 && ports.length == noms.length) {
+				for (int i=0 ; i < nbMachines ; i++) {
+					urls[i] = "//" + noms[i] + ":" + ports[i] + "/Daemon";
+					System.out.println(urls[i]);
+				}
+			} else {
+				usage_config();
+			}
+									
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return urls;
+
+	}
 
     public static void HdfsDelete(String hdfsFname) {
         try{
@@ -38,6 +97,7 @@ public class HdfsClient {
                 String nom = inter[0];
                 String extension = inter[1];
                 ObjectOutputStream objectOS = new ObjectOutputStream(sock.getOutputStream());
+                //System.out.println("i"+Integer.toString(i)+"::::j::::"+Integer.toString(j));
                 objectOS.writeObject("CMD_DELETE" + "/@/" + nom + "_" + Integer.toString(i) + "." + extension);
                 objectOS.close();
                 sock.close();
@@ -66,12 +126,12 @@ public class HdfsClient {
             
         	File file = new File("data/"+localFSSourceFname);
         	long taille = file.length();
-        	System.out.println(String.valueOf(taille));
+        	//System.out.println(String.valueOf(taille));
         	// vérifier que la taille du bloc est un diviseur de la taille totale sinon ajouter 1.
         	
         	int nbfragments = (int) (taille/taille_fragment);
             if (taille%taille_fragment != 0) { nbfragments ++;}
-            System.out.println(String.valueOf(nbfragments));
+            //System.out.println(String.valueOf(nbfragments));
             
         	// ajouter le nombre de fragments dans le fichier node.
         	
@@ -105,7 +165,7 @@ public class HdfsClient {
                     //System.out.println("Début d'envoi du fragment numéro " + Integer.toString(t));
                     //System.out.println(nomMachines[t]);
 
-                    System.out.println("attempt to connect to "+nomMachines[t]+" num port :"+numPorts[t]);
+                    //System.out.println("attempt to connect to "+nomMachines[t]+" num port :"+numPorts[t]);
 
                     Socket socket = new Socket (nomMachines[t], numPorts[t]);
 
@@ -116,7 +176,7 @@ public class HdfsClient {
                     objectOS.writeObject("CMD_WRITE" + "/@/" + nom + "_" + Integer.toString(i) + "." + extension + "/@/" + fragment);
                     objectOS.close();
                     socket.close();
-                    System.out.println("le fragment " + Integer.toString(i) + " a été bien envoyé à " + nomMachines[t]);
+                    //System.out.println("le fragment " + Integer.toString(i) + " a été bien envoyé à " + nomMachines[t]);
                 }
                 fichier.close();
             }else if (fmt == Type.KV){
@@ -157,28 +217,27 @@ public class HdfsClient {
     }
 
     public static void HdfsRead(String hdfsFname, String localFSDestFname) {      
-        File file = new File("data/filesample.txt");
+        String[] inter = hdfsFname.split("\\.");
+        String nom = inter[0];
+        String extension = inter[1];
+        File file = new File("data/"+nom+"-red."+extension);
         try {
         	int j;
             FileWriter fWrite = new FileWriter(file);
             Namenode node = new Namenode();
             int nbfragments = node.getNbFragments(hdfsFname);
-            System.out.println(Integer.toString(nbfragments));
             for (int i = 0; i < nbfragments; i++) {
-                System.out.println(Integer.toString(i));
+                //System.out.println(Integer.toString(i));
                 j = i % nbServers;
-                System.out.println(Integer.toString(j));
+                //System.out.println(Integer.toString(j));
                 Socket socket = new Socket (nomMachines[j], numPorts[j]);
                 ObjectOutputStream objectOS = new ObjectOutputStream(socket.getOutputStream());
-                String[] inter = hdfsFname.split("\\.");
-                String nom = inter[0];
-                String extension = inter[1];
-                objectOS.writeObject("CMD_READ" + "/@/" + nom +"_"+ Integer.toString(i) + "." + extension);
-                objectOS.close();
+                objectOS.writeObject("CMD_READ" + "/@/" + nom +"_"+ Integer.toString(i) + "." + extension + "-res");
                 ObjectInputStream objectIS = new ObjectInputStream(socket.getInputStream());
                 String fragment = (String) objectIS.readObject();
                 fWrite.write(fragment,0,fragment.length());
                 objectIS.close();
+                objectOS.close();
                 socket.close();
             }
             fWrite.close();

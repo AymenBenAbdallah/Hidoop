@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script de lacement des démons en local
+# Script de lancement des démons en local
 
 
 
@@ -13,7 +13,7 @@
 #java -cp bin hdfs.HdfsServer 3300 //localhost:3300 &
 #java -cp bin hdfs.HdfsServer 3400 //localhost:3400 &
 
-chemin="~/2ASR/Hidoop"
+chemin="~/Travail/2A/Hidoop_git/Hidoop"
 # Entrez votre identifiant INP
 
 # Faut-il générer les clés publiques ? Pas besoin si ça a déjà été fait !
@@ -76,7 +76,7 @@ ssh goldorak java -cp ${chemin}/bin hdfs.HdfsServer 3434 &
 
 #lancer le client
 sleep 0.5
-#java -cp bin hdfs.HdfsClient write line filesample.txt
-#java -cp bin hdfs.HdfsClient delete data/filesample.txt
-java -cp bin hdfs.HdfsClient read data/filesample.txt
+java -cp bin hdfs.HdfsClient write line filesample.txt
+#java -cp bin hdfs.HdfsClient delete filesample.txt
+#java -cp bin hdfs.HdfsClient read filesample.txt
 

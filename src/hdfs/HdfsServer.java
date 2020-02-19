@@ -25,7 +25,7 @@ public class HdfsServer {
                 switch (commande) {
                     case "CMD_DELETE" :
                         
-                        File file = new File("/tmp/"+req[1]);
+                        File file = new File("/tmp/data/"+req[1]);
                         file.delete();
                         break;
                     
@@ -37,7 +37,7 @@ public class HdfsServer {
                         //File wFile = new File(System.getProperty("user.home")+"/Téléchargements/Hidoop-master/"+req[1]);
                         File wFile = new File("/tmp/data/");
                         wFile.mkdir();
-                        wFile = new File("/tmp/"+req[1]);
+                        wFile = new File("/tmp/data/"+req[1]);
                         //System.out.println("création fichier");
                         /*try{
                         if (wFile.createNewFile()) {
@@ -60,13 +60,12 @@ public class HdfsServer {
                         
                     
                     case "CMD_READ" :
-                        File rFile = new File("/tmp/" + req[1]);
+                        File rFile = new File("/tmp/data/" + req[1]);
                         BufferedReader bufReader = new BufferedReader(new FileReader(rFile));
                         String fragment = "";
                         String d = bufReader.readLine();
                         while (d != null) {
                             fragment = fragment + d + "\n";
-                            System.out.println(fragment);
                             d = bufReader.readLine();
                         }
                         ObjectOutputStream objectOS = new ObjectOutputStream(socket.getOutputStream());

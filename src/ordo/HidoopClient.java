@@ -13,7 +13,6 @@ import formats.Format.Type;
 import formats.FormatReader;
 import formats.FormatWriter;
 import formats.KVFormat;
-import formats.LineFormat;
 import hdfs.HdfsClient;
 import java.io.*;
 

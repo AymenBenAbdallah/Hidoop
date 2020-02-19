@@ -1,22 +1,13 @@
 package ordo;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.rmi.RemoteException;
-import java.util.HashMap;
-
 import formats.Format;
 import formats.Format.Type;
 import formats.KVFormat;
 import formats.LineFormat;
 import hdfs.Namenode;
 import map.MapReduce;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.ObjectInputStream;
 
 public class Job implements JobInterface {
 	
@@ -126,7 +117,7 @@ public class Job implements JobInterface {
 					System.out.println("fsce : " + fsce);
 					System.out.println("fdest : " + fdest);
 	
-					reader = new KVFormat(fsce);
+					reader = new LineFormat(fsce);
 					writer = new KVFormat(fdest);
 					
 					// compteur : si on atteint la fin de la liste de démons,

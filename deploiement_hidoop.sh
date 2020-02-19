@@ -28,7 +28,7 @@ then
 fi
 
 # Lancer les démons sur les machines distantes
-ssh vador java -cp ${chemin}/bin ordo.DaemonImpl 1100 &
+ssh sodium java -cp ${chemin}/bin ordo.DaemonImpl 1100 &
 ssh tao java -cp ${chemin}/bin ordo.DaemonImpl 1300 &
 ssh goldorak java -cp ${chemin}/bin ordo.DaemonImpl 1400 &
 

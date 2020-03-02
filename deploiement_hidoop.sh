@@ -5,7 +5,7 @@
 ###############################################################
 
 # Chemin d'accès vers le projet Hidoop
-chemin="~/Travail/2A/Hidoop_git/Hidoop/"
+chemin="Téléchargements/Hidoopgit/"
 
 # Faut-il générer les clés publiques ? Pas besoin si ça a déjà été fait !
 gen_cles=false # < false | true >

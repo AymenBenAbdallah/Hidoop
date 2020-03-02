@@ -123,7 +123,8 @@ public class Job implements JobInterface {
 					// compteur : si on atteint la fin de la liste de démons,
 					// retourner au début de celle-ci ; ainsi, on parcourt
 					// bien les fragments conformément à HDFS
-					listeDaemon[i%(nbFragments-1)].runMap(mr, reader, writer, cb);
+					System.out.println(i%nbDaemons);
+					listeDaemon[i%nbDaemons].runMap(mr, reader, writer, cb);
 			}
 		}
 		} catch (RemoteException e) {

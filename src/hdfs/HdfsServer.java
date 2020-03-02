@@ -37,6 +37,7 @@ public class HdfsServer {
                         //File wFile = new File(System.getProperty("user.home")+"/Téléchargements/Hidoop-master/"+req[1]);
                         File wFile = new File("/tmp/data/");
                         wFile.mkdir();
+                        
                         wFile = new File("/tmp/data/"+req[1]);
                         //System.out.println("création fichier");
                         /*try{

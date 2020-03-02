@@ -36,7 +36,7 @@ public class HdfsClient {
 		
 		File file = new File(path);
 		int cpt = 0;
-		int nbMachines = 3;
+		int nbMachines = 4;
 		
 		String[] ports = new String[nbMachines];
 		String[] noms = new String[nbMachines];
@@ -126,12 +126,12 @@ public class HdfsClient {
             
         	File file = new File("data/"+localFSSourceFname);
         	long taille = file.length();
-        	//System.out.println(String.valueOf(taille));
+            System.out.println(String.valueOf(taille));
         	// vérifier que la taille du bloc est un diviseur de la taille totale sinon ajouter 1.
         	
         	int nbfragments = (int) (taille/taille_fragment);
             if (taille%taille_fragment != 0) { nbfragments ++;}
-            //System.out.println(String.valueOf(nbfragments));
+            System.out.println(String.valueOf(nbfragments));
             
         	// ajouter le nombre de fragments dans le fichier node.
         	
@@ -162,7 +162,7 @@ public class HdfsClient {
                     }
                     
                     int t = i%nbServers;
-                    //System.out.println("Début d'envoi du fragment numéro " + Integer.toString(t));
+                    System.out.println("Début d'envoi du fragment numéro " + Integer.toString(t));
                     //System.out.println(nomMachines[t]);
 
                     //System.out.println("attempt to connect to "+nomMachines[t]+" num port :"+numPorts[t]);
@@ -176,7 +176,7 @@ public class HdfsClient {
                     objectOS.writeObject("CMD_WRITE" + "/@/" + nom + "_" + Integer.toString(i) + "." + extension + "/@/" + fragment);
                     objectOS.close();
                     socket.close();
-                    //System.out.println("le fragment " + Integer.toString(i) + " a été bien envoyé à " + nomMachines[t]);
+                    System.out.println("le fragment " + Integer.toString(i) + " a été bien envoyé à " + nomMachines[t]);
                 }
                 fichier.close();
             }else if (fmt == Type.KV){

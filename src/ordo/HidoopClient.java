@@ -41,7 +41,7 @@ public class HidoopClient {
 		
 		File file = new File(path);
 		int cpt = 0;
-		int nbMachines = 3;
+		int nbMachines = 4;
 		
 		String[] ports = new String[nbMachines];
 		String[] noms = new String[nbMachines];
@@ -97,7 +97,7 @@ public class HidoopClient {
 		FormatWriter writer;
 		
 		// nombre de machines contenues dans le cluster
-		int nbCluster = 3;
+		int nbCluster = 4;
 		
 		// informations de format de fichier
 		Type ft;
@@ -161,12 +161,16 @@ public class HidoopClient {
 			MyMapReduce mr = new MyMapReduce();
 			
 			// lancement des tâches
+			System.out.println("Lancement du Job");
 			job.startJob(mr);
+			System.out.println("Fin du lancement du Job");
 			
 			// attendre que toutes les tâches soient terminées
 			// via un sémaphore initialisé à 0
-			Semaphore attente = job.cb.getFinTache();
+			Semaphore attente = job.cb.getTachesFinies();
+			System.out.println("Attente du sémaphore");
 			attente.acquire();
+			System.out.println("Fin du sémaphore");
 			
 			// récupérer le fichier traité via HDFS
 			HdfsClient.HdfsRead(hdfsFname, localFSDestFname);

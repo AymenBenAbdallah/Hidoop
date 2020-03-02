@@ -13,7 +13,7 @@
 #java -cp bin hdfs.HdfsServer 3300 //localhost:3300 &
 #java -cp bin hdfs.HdfsServer 3400 //localhost:3400 &
 
-chemin="~/Travail/2A/Hidoop_git/Hidoop"
+chemin="Téléchargements/Hidoopgit"
 # Entrez votre identifiant INP
 
 # Faut-il générer les clés publiques ? Pas besoin si ça a déjà été fait !
@@ -45,6 +45,10 @@ fi
 #fuser -k 3400/tcp
 #fuser -k 3000/tcp
 
+ssh tao mkdir /tmp/data
+ssh sodium mkdir /tmp/data
+ssh leia mkdir /tmp/data
+ssh goldorak mkdir /tmp/data
 
 #ssh ${id}@vador fuser -k 3100/tcp
 #ssh ${id}@leia fuser -k 3500/tcp

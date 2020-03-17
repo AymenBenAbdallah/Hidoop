@@ -9,6 +9,7 @@ import java.util.Arrays;
 
 import application.MyMapReduce;
 import formats.Format;
+import formats.Format.OpenMode;
 import formats.Format.Type;
 import formats.FormatReader;
 import formats.FormatWriter;
@@ -93,8 +94,8 @@ public class HidoopClient {
 		String[] formats = {"line","kv"};
 		
 		// Fichiers source / destination
-		FormatReader reader;
-		FormatWriter writer;
+		Format reader;
+		Format writer;
 		
 		// nombre de machines contenues dans le cluster
 		int nbCluster = 4;
@@ -177,8 +178,14 @@ public class HidoopClient {
 			
 			// Reader : fichier local après traitement sur les machines du cluster
 			// Writer : fichier final généré après application du reduce
+			OpenMode modeR = Format.OpenMode.R;
+			OpenMode modeW = Format.OpenMode.W;
+			
 			reader = new KVFormat(localFSDestFname);
 			writer = new KVFormat(reduceDestFname);
+			
+			reader.open(modeR);
+			writer.open(modeW);
 			
 			// appliquer reduce sur le résultat
 			// reader : format kv ; writer : format kv

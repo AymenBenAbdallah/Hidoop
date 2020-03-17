@@ -220,7 +220,7 @@ public class HdfsClient {
         String[] inter = hdfsFname.split("\\.");
         String nom = inter[0];
         String extension = inter[1];
-        File file = new File("data/"+nom+"-red."+extension);
+        File file = new File("/tmp"+nom+"-red."+extension);
         try {
         	int j;
             FileWriter fWrite = new FileWriter(file);

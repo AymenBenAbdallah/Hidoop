@@ -190,6 +190,9 @@ public class HidoopClient {
 			// appliquer reduce sur le résultat
 			// reader : format kv ; writer : format kv
 			mr.reduce(reader, writer);
+			
+			reader.close();
+			writer.close();
 						
 		} catch (RemoteException e) {
 			e.printStackTrace();

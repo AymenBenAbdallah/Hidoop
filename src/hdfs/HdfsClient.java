@@ -220,7 +220,7 @@ public class HdfsClient {
         String[] inter = hdfsFname.split("\\.");
         String nom = inter[0];
         String extension = inter[1];
-        File file = new File("/tmp"+nom+"-red."+extension);
+        File file = new File("~/Téléchargements/Hidoopgit/"+localFSDestFname); // le format de ce dernier etant data/filesample-res.txt
         try {
         	int j;
             FileWriter fWrite = new FileWriter(file);
@@ -232,7 +232,7 @@ public class HdfsClient {
                 //System.out.println(Integer.toString(j));
                 Socket socket = new Socket (nomMachines[j], numPorts[j]);
                 ObjectOutputStream objectOS = new ObjectOutputStream(socket.getOutputStream());
-                objectOS.writeObject("CMD_READ" + "/@/" + nom +"_"+ Integer.toString(i) + "." + extension + "-res");
+                objectOS.writeObject("CMD_READ" + "/@/" + nom +"_"+ Integer.toString(i) + "-res" + "." + extension);
                 ObjectInputStream objectIS = new ObjectInputStream(socket.getInputStream());
                 String fragment = (String) objectIS.readObject();
                 fWrite.write(fragment,0,fragment.length());
@@ -254,7 +254,7 @@ public class HdfsClient {
             if (args.length<2) {usage(); return;}
 
             switch (args[0]) {
-              case "read": HdfsRead(args[1],null); break;
+              case "read": HdfsRead(args[1],args[2]); break;
               case "delete": HdfsDelete(args[1]); break;
               case "write": 
                 Format.Type fmt;

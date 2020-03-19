@@ -174,7 +174,8 @@ public class HidoopClient {
 			System.out.println("Fin du sémaphore");
 			
 			// récupérer le fichier traité via HDFS
-			HdfsClient.HdfsRead(hdfsFname, reduceDestFname);
+			HdfsClient.HdfsRead(hdfsFname, localFSDestFname);
+			System.out.println("fin du read ***");
 			
 			// Reader : fichier local après traitement sur les machines du cluster
 			// Writer : fichier final généré après application du reduce

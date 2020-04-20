@@ -220,9 +220,10 @@ public class HdfsClient {
         String[] inter = hdfsFname.split("\\.");
         String nom = inter[0];
         String extension = inter[1];
-        File file = new File("~/Téléchargements/Hidoopgit/"+localFSDestFname); // le format de ce dernier etant data/filesample-res.txt
+        File file = new File(localFSDestFname); // le format de ce dernier soit data/filesample-red.txt
         try {
         	int j;
+		System.out.println("hello this is the file ~/Téléchargements/Hidoopgit/"+localFSDestFname);
             FileWriter fWrite = new FileWriter(file);
             Namenode node = new Namenode();
             int nbfragments = node.getNbFragments(hdfsFname);

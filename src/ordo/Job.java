@@ -126,6 +126,8 @@ public class Job implements JobInterface {
 					System.out.println(i%nbDaemons);
 					listeDaemon[i%nbDaemons].runMap(mr, reader, writer, cb);
 			}
+			
+			System.exit(0);
 		}
 		} catch (RemoteException e) {
 				e.printStackTrace();

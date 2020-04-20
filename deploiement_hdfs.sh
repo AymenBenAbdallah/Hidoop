@@ -82,5 +82,5 @@ ssh goldorak java -cp ${chemin}/bin hdfs.HdfsServer 3434 &
 sleep 0.5
 java -cp bin hdfs.HdfsClient write line filesample.txt
 #java -cp bin hdfs.HdfsClient delete filesample.txt
-#java -cp bin hdfs.HdfsClient read filesample.txt
+#java -cp bin hdfs.HdfsClient read data/filesample.txt data/filesample-red.txt
 

@@ -190,7 +190,9 @@ public class HidoopClient {
 			
 			// appliquer reduce sur le résultat
 			// reader : format kv ; writer : format kv
+			System.out.println("Début du reduce");
 			mr.reduce(reader, writer);
+			System.out.println("Fin du reduce");
 			
 			reader.close();
 			writer.close();

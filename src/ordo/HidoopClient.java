@@ -11,8 +11,6 @@ import application.MyMapReduce;
 import formats.Format;
 import formats.Format.OpenMode;
 import formats.Format.Type;
-import formats.FormatReader;
-import formats.FormatWriter;
 import formats.KVFormat;
 import hdfs.HdfsClient;
 import java.io.*;
@@ -25,7 +23,7 @@ public class HidoopClient {
 	public static Daemon listeDaemon[];
   
 	private static void usage() {
-		System.out.println("Utilisation : java HidoopClient fichier format");
+		System.out.println("Utilisation : java HidoopClient fichier format nbmachines");
 	}
 	
 	private static void usage_config() {
@@ -37,12 +35,11 @@ public class HidoopClient {
 	}
 	
 	// récupérer les emplacements indiqués dans le fichier de configuration
-	private static String[] recupURL() {
+	private static String[] recupURL(int nbMachines) {
 		String path = "src/config/config_hidoop.cfg";
 		
 		File file = new File(path);
 		int cpt = 0;
-		int nbMachines = 4;
 		
 		String[] ports = new String[nbMachines];
 		String[] noms = new String[nbMachines];
@@ -97,8 +94,8 @@ public class HidoopClient {
 		Format reader;
 		Format writer;
 		
-		// nombre de machines contenues dans le cluster
-		int nbCluster = 4;
+		// nombre de machines à utiliser
+		int nbCluster;
 		
 		// informations de format de fichier
 		Type ft;
@@ -108,7 +105,7 @@ public class HidoopClient {
 		
 		try {
 			// vérifier le bon usage du client
-			if (args.length < 2) {
+			if (args.length < 3) {
 				usage();
 				System.exit(1);
 			} else {
@@ -139,8 +136,11 @@ public class HidoopClient {
 				ft = Format.Type.KV;
 			}
 			
+			// récupérer le nombre de machines
+			nbCluster = Integer.parseInt(args[2]);
+			
 			// récupérer les URLs depuis le fichier de configuration 
-			urlDaemon = recupURL();
+			urlDaemon = recupURL(nbCluster);
 
 			// récupérer les références des objets Daemon distants
 			// à l'aide des url (déjà connues)

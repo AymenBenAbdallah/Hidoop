@@ -6,21 +6,19 @@ echo '------------------------------------------------------'
 DATE='/bin/date'
 
 # Paramétrage des tests
-# echo "Entrez ... : "
-# read PARAMETRE
+echo $'Entrez le nombre de machines à utiliser \n(les n premières de la liste du fichier de config) :'
+read NBMACHINES
 
 # Lancement des commandes
 DEBUT=$($DATE +'%s')
 echo $'\n## Début de l\'exécution ##\n'
 
-echo $'\n# Arret de HDFS #\n'
-sh arret_hdfs.sh
-echo $'\n# Arret de Hidoop #\n'
-sh arret_hidoop.sh
+echo $'\n# Arret des Daemons Hidoop et HDFS #\n'
+sh arret_daemons.sh
 echo $'\n# Déploiement de HDFS #\n'
 sh deploiement_hdfs.sh
 echo $'\n# Déploiement de Hidoop #\n'
-sh deploiement_hidoop.sh
+sh deploiement_hidoop.sh $NBMACHINES
 
 FIN=$($DATE +'%s')
 

@@ -10,10 +10,10 @@ import formats.LineFormat;
 
 public class HdfsClient {
 
-    private static int numPorts[] = {3158, 3292, 3692, 3434, 3300, 3000};
-    private static String nomMachines[] = {"sodium", "leia", "tao", "goldorak", "luke", "vador"};
-    final static int nbServers = 4;
-    private static long taille_fragment = 200;
+    private static int numPorts[];//{3158, 3292, 3692, 3434, 3300, 3000};
+    private static String nomMachines[];//{"sodium", "leia", "tao", "goldorak", "luke", "vador"};
+    private static int nbServers;
+    private static long taille_fragment = recuptaille();//200;
     private static KV cst = new KV("hi","hello");
 
     private static void usage() {
@@ -30,18 +30,44 @@ public class HdfsClient {
 				+ "L4 : taille");
 	}
 	
-	// récupérer les emplacements indiqués dans le fichier de configuration
-	private static String[] recupport() {
+	// récupérer la taille du fragment indiqué dans le fichier de configuration
+	private static long recuptaille() {
 		String path = "src/config/config_hidoop.cfg";
 		
 		File file = new File(path);
 		int cpt = 0;
-		int nbMachines = 4;
+		int nbMachines = nbServers;
+		BufferedReader br;
+		long Taillefr = 0;
+		try {
+			br = new BufferedReader(new FileReader(file));
+			String st; 
+			while ((st = br.readLine()) != null) {
+				if (!st.startsWith("#")) {
+				  if (cpt == 3) {
+				      	  Taillefr = new Long(Integer.parseInt(st));
+					  
+				  }
+				  cpt++;
+				}				  
+			  }
+			br.close();					
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
-		String[] ports = new String[nbMachines];
+		return Taillefr;
+
+	}
+
+	// récupérer noms des machines indiqués dans le fichier de configuration
+	private static String[] recupnom() {
+		String path = "src/config/config_hidoop.cfg";
+		
+		File file = new File(path);
+		int cpt = 0;
+		int nbMachines = nbServers;
 		String[] noms = new String[nbMachines];
-		String[] urls = new String[nbMachines];
-		  
 		BufferedReader br;
 		try {
 			br = new BufferedReader(new FileReader(file));
@@ -53,33 +79,54 @@ public class HdfsClient {
 				  if (cpt == 0) {
 					  noms = st.split(",");
 				  }
-				  // ports RMI
-				  if (cpt == 2) {
-					  ports = st.split(",");
-				  }
-				  cpt++;					  
+				  cpt++;				  
 			  }
 			}
 			
-			br.close();
-			
-			// si le fichier de configuration est correct
-			if (noms.length != 0 && ports.length == noms.length) {
-				for (int i=0 ; i < nbMachines ; i++) {
-					urls[i] = "//" + noms[i] + ":" + ports[i] + "/Daemon";
-					System.out.println(urls[i]);
-				}
-			} else {
-				usage_config();
-			}
-									
+			br.close();				
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		return urls;
+		return noms;
 
 	}
+
+	// récupérer les ports indiqués dans le fichier de configuration
+	private static int[] recupport() {
+		String path = "src/config/config_hidoop.cfg";
+		
+		File file = new File(path);
+		int cpt = 0;
+		int nbMachines = nbServers;
+		String[] ports = new String[nbMachines];
+		BufferedReader br;
+		try {
+			br = new BufferedReader(new FileReader(file));
+			String st; 
+			while ((st = br.readLine()) != null) {
+			  // si la ligne n'est pas un commentaire
+			  if (!st.startsWith("#")) {
+				  // noms des machines
+				  if (cpt == 1) {
+					  ports = st.split(",");
+				  }
+				  cpt++;				  
+			  }
+			}
+			br.close();				
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		int[] intports = new int [nbMachines];
+		for (int i=0; i<nbMachines; i++){
+		    intports[i] = Integer.parseInt(ports[i]);
+		}
+		return intports;
+
+	}
+
 
     public static void HdfsDelete(String hdfsFname) {
         try{
@@ -250,10 +297,11 @@ public class HdfsClient {
 	
     public static void main(String[] args) {
         // java HdfsClient <read|write> <line|kv> <file>
-
         try {
-            if (args.length<2) {usage(); return;}
-
+            if (args.length<3) {usage(); return;}
+	    nbServers = Integer.parseInt(args[3]);
+	    numPorts = recupport();
+	    nomMachines = recupnom();
             switch (args[0]) {
               case "read": HdfsRead(args[1],args[2]); break;
               case "delete": HdfsDelete(args[1]); break;

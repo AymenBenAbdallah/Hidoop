@@ -25,16 +25,16 @@ IFS=',' read -ra tabph <<< "$listeph"
 # Compiler les fichiers du projet
 javac -d bin src/**/*.java
 
-for index in ${!listepc[*]}; do 
+for index in ${!tabpc[*]}; do 
   # Creer les dossiers data
-  ssh ${listepc[$index]} mkdir /tmp/data
+  ssh ${tabpc[$index]} mkdir /tmp/data
   # Lancer les démons Hdfs
-  ssh ${listepc[$index]} java -cp ${chemin}/bin hdfs.HdfsServer ${listeph[$index]} &
+  ssh ${tabpc[$index]} java -cp ${chemin}/bin hdfs.HdfsServer ${tabph[$index]} &
 done
 
 # Lancement du client
 sleep 0.5
 
-java -cp bin hdfs.HdfsClient write line filesample.txt
+java -cp bin hdfs.HdfsClient write line filesample.txt $1
 #java -cp bin hdfs.HdfsClient delete filesample.txt
 #java -cp bin hdfs.HdfsClient read data/filesample.txt data/filesample-red.txt

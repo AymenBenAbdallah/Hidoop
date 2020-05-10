@@ -14,11 +14,11 @@ DEBUT=$($DATE +'%s')
 echo $'\n## Début de l\'exécution ##\n'
 
 echo $'\n# Arret des Daemons Hidoop et HDFS #\n'
-sh arret_daemons.sh
+./arret_daemons.sh
 echo $'\n# Déploiement de HDFS #\n'
-sh deploiement_hdfs.sh
+./deploiement_hdfs.sh $NBMACHINES
 echo $'\n# Déploiement de Hidoop #\n'
-sh deploiement_hidoop.sh $NBMACHINES
+./deploiement_hidoop.sh $NBMACHINES
 
 FIN=$($DATE +'%s')
 

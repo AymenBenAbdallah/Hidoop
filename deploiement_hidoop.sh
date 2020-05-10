@@ -26,8 +26,8 @@ IFS=',' read -ra tabph <<< "$listeph"
 javac -d bin src/**/*.java
 
 # Lancer les démons sur les machines distantes
-for index in ${!listepc[*]}; do 
-  ssh ${listepc[$index]} java -cp ${chemin}/bin ordo.DaemonImpl ${listeph[$index]} &
+for index in ${!tabpc[*]}; do
+  ssh ${tabpc[$index]} java -cp ${chemin}/bin ordo.DaemonImpl ${tabph[$index]} &
 done
 
 sleep 3

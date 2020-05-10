@@ -7,32 +7,29 @@
 # Chemin d'accès vers le projet Hidoop
 chemin="Téléchargements/Hidoopgit/"
 
-# Faut-il générer les clés publiques ? Pas besoin si ça a déjà été fait !
-gen_cles=false # < false | true >
+# Récupérer la 2e ligne du fichier de config (noms des machines)
+listepc=$(sed "2q;d" src/config/config_hidoop.cfg)
+
+# Découper la chaîne obtenue sur les délimiteurs ","
+# et la stocker dans un tableau
+IFS=',' read -ra tabpc <<< "$listepc"
+
+# Récupérer la 6e ligne du fichier de config (ports Hidoop)
+listeph=$(sed "6q;d" src/config/config_hidoop.cfg)
+
+# Découper la chaîne obtenue sur les délimiteurs ","
+# et la stocker dans un tableau
+IFS=',' read -ra tabph <<< "$listeph"
 
 ###############################################################
 # Compiler les fichiers du projet
 javac -d bin src/**/*.java
 
-# S'il faut générer les clés
-if [ "$gen_cles" = true ]
-then
-	# Génération des clés publiques
-	ssh-keygen -t  rsa
-
-	# Envoyer la clé publique sur les machines du cluster
-	ssh-copy-id vador
-	ssh-copy-id leia
-	ssh-copy-id tao
-	ssh-copy-id goldorak
-fi
-
 # Lancer les démons sur les machines distantes
-ssh sodium java -cp ${chemin}/bin ordo.DaemonImpl 1100 &
-ssh leia java -cp ${chemin}/bin ordo.DaemonImpl 1200 &
-ssh tao java -cp ${chemin}/bin ordo.DaemonImpl 1300 &
-ssh goldorak java -cp ${chemin}/bin ordo.DaemonImpl 1400 &
+for index in ${!listepc[*]}; do 
+  ssh ${listepc[$index]} java -cp ${chemin}/bin ordo.DaemonImpl ${listeph[$index]} &
+done
 
 sleep 3
 
-java -cp bin ordo.HidoopClient data/filesample.txt line
+java -cp bin ordo.HidoopClient data/filesample.txt line $1

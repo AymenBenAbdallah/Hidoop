@@ -7,8 +7,9 @@ listepc=$(sed "2q;d" src/config/config_hidoop.cfg)
 # et la stocker dans un tableau
 IFS=',' read -ra tabpc <<< "$listepc"
 
-# Supprimer les dossiers contenant les fragments et données hdfs + hidoop
+# Arrêter les démons hidoop et hdfs sur les machines distantes
 for pc in "${tabpc[@]}"
 do
-    ssh $pc rm -rf /tmp/data
+	ssh $pc "kill \$(jps | grep DaemonImpl | awk '{print \$1}')"
+	ssh $pc "kill \$(jps | grep HdfsServer | awk '{print \$1}')"
 done

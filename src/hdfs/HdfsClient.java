@@ -15,6 +15,7 @@ public class HdfsClient {
     private static int nbServers;
     private static long taille_fragment = recuptaille();//200;
     private static KV cst = new KV("hi","hello");
+    private static String SOURCE = System.getProperty("user.home")+"/nosave/hidoop_data/";
 
     private static void usage() {
         System.out.println("Usage: java HdfsClient read <file>");
@@ -171,9 +172,9 @@ public class HdfsClient {
             
             // calculer la taille du fichier
             
-        	File file = new File("data/"+localFSSourceFname);
+        	File file = new File(SOURCE+localFSSourceFname);
         	long taille = file.length();
-            System.out.println(String.valueOf(taille));
+           // System.out.println(String.valueOf(taille));
         	// vérifier que la taille du bloc est un diviseur de la taille totale sinon ajouter 1.
         	
         	int nbfragments = (int) (taille/taille_fragment);
@@ -190,7 +191,7 @@ public class HdfsClient {
             if (fmt == Type.LINE){
             	
             	
-                LineFormat fichier = new LineFormat("data/" + localFSSourceFname);
+                LineFormat fichier = new LineFormat(SOURCE+localFSSourceFname);
                 fichier.open(Format.OpenMode.R);
                 
                 for (int i=0; i < nbfragments; i++){
@@ -209,7 +210,7 @@ public class HdfsClient {
                     }
                     
                     int t = i%nbServers;
-                    System.out.println("Début d'envoi du fragment numéro " + Integer.toString(t));
+		    //System.out.println("Début d'envoi du fragment numéro " + Integer.toString(t));
                     //System.out.println(nomMachines[t]);
 
                     //System.out.println("attempt to connect to "+nomMachines[t]+" num port :"+numPorts[t]);
@@ -223,7 +224,8 @@ public class HdfsClient {
                     objectOS.writeObject("CMD_WRITE" + "/@/" + nom + "_" + Integer.toString(i) + "." + extension + "/@/" + fragment);
                     objectOS.close();
                     socket.close();
-                    System.out.println("le fragment " + Integer.toString(i) + " a été bien envoyé à " + nomMachines[t]);
+                    if (i%100==0){System.out.println("fragment machin" + Integer.toString(i));}
+		    //System.out.println("le fragment " + Integer.toString(i) + " a été bien envoyé à " + nomMachines[t]);
                 }
                 fichier.close();
             }else if (fmt == Type.KV){

@@ -35,6 +35,6 @@ done
 # Lancement du client
 sleep 0.5
 
-java -cp bin hdfs.HdfsClient write line filesample.txt $1
+java -cp bin hdfs.HdfsClient write line data.txt $1
 #java -cp bin hdfs.HdfsClient delete filesample.txt
 #java -cp bin hdfs.HdfsClient read data/filesample.txt data/filesample-red.txt

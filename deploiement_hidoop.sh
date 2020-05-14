@@ -23,7 +23,7 @@ IFS=',' read -ra tabph <<< "$listeph"
 
 ###############################################################
 # Compiler les fichiers du projet
-javac -d bin src/**/*.java
+#javac -d bin src/**/*.java
 
 # Lancer les démons sur les machines distantes
 for index in ${!tabpc[*]}; do

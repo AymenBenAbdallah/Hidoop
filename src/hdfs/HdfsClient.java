@@ -224,7 +224,7 @@ public class HdfsClient {
                     objectOS.writeObject("CMD_WRITE" + "/@/" + nom + "_" + Integer.toString(i) + "." + extension + "/@/" + fragment);
                     objectOS.close();
                     socket.close();
-                    if (i%100==0){System.out.println("fragment machin" + Integer.toString(i));}
+                    if (i%1000==0){System.out.println("fragment machine " + Integer.toString(i));}
 		    //System.out.println("le fragment " + Integer.toString(i) + " a été bien envoyé à " + nomMachines[t]);
                 }
                 fichier.close();

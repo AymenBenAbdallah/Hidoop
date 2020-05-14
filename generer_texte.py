@@ -4,7 +4,7 @@
 N = 50000
 
 #la ou seront generes les fichiers .txt
-path = "/home/lbourgui/test"
+path = "/home/aaitbela"
 
 
 
@@ -22,7 +22,7 @@ l8 ="\n"
 liste_ligne = [l1, l2, l3, l4, l5, l6, l7, l8]
 
 
-fichier = open(path+"/data.txt", "w")
+fichier = open("/home/aaitbela/nosave/hidoop_data/data.txt", "w")
 fichier.write(l1)
 fichier.write(l2)
 fichier.write(l3)
@@ -33,7 +33,7 @@ fichier.write(l7)
 fichier.write(l8)
 fichier.close()
 
-fichier = open(path+"/data.txt", "a")
+fichier = open("/home/aaitbela/nosave/hidoop_data/data.txt", "a")
 j = -1
 for i in range(0,N-2):
     fichier.write(l1)
@@ -64,9 +64,12 @@ print(total)
 
 
 nb_simple = []
+history = []
 for y in total:
-    a=[y,total.count(y)]
-    nb_simple.append(a)
+    if y not in history:
+    	a=[y,total.count(y)]
+    	nb_simple.append(a)
+	history.append(y)
     
 for i in range(0,len(nb_simple)):
     c = nb_simple[i][1]
@@ -75,8 +78,7 @@ for i in range(0,len(nb_simple)):
 
 
 #ecriture dans le fichier resultat
-fichier = open(path+"/nombre_mot.txt", "w")
+fichier = open("data/nombre_mot.txt", "w")
 for m in nb_simple:
     fichier.write(m[0]+" <-> "+str(m[1])+"\n")
 fichier.close()
-

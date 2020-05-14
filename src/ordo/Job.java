@@ -85,17 +85,14 @@ public class Job implements JobInterface {
 		} catch (RemoteException e1) {
 			e1.printStackTrace();
 		}
-		
-		// chemin d'accès sur la machine
-		String path = "/tmp/";
-		
+				
 		// appliquer le traitement sur tous les fragments :
 		// s'il n'y a qu'un fragment :
 		try {
 		if (nbFragments == 1) {
 			// on met le suffixe "_1" pour le premier fragment
 
-			fsce = path + nomExt[0] + "_1" + "." + nomExt[1];
+			fsce = nomExt[0] + "_1" + "." + nomExt[1];
 			nomExt = fsce.split("\\.");
 
 			fdest = fsce + "-res";
@@ -109,10 +106,10 @@ public class Job implements JobInterface {
 		} else {
 			for (int i = 0 ; i < nbFragments; i++) {
 					// format des noms de fragments : "<nom fichier HDFS>_< n° fragment >"
-					fsce = path + nomExt[0] + "_" + i + "." + nomExt[1];
+					fsce = nomExt[0] + "_" + i + "." + nomExt[1];
 
 					// fragment destination : ajouter le suffixe "-res";
-					fdest = path + nomExt[0] + "_" + i + "-res" + "." + nomExt[1];
+					fdest = nomExt[0] + "_" + i + "-res" + "." + nomExt[1];
 					
 					System.out.println("fsce : " + fsce);
 					System.out.println("fdest : " + fdest);

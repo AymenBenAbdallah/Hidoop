@@ -121,7 +121,7 @@ public class HidoopClient {
 			// fichier HDFS destination  : ajout du suffixe "-res"
 			// Nom du fichier traité avant application du reduce
 			String[] nomExt = hdfsFname.split("\\.");
-			String localFSDestFname = nomExt[0] + "-res" + "." + nomExt[1];
+			String localFSDestFname = "data/" + nomExt[0] + "-res" + "." + nomExt[1];
 			System.out.println(localFSDestFname);
 			
 			// fichier résultat du reduce : ajout du suffixe "-red"

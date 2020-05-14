@@ -126,7 +126,7 @@ public class HidoopClient {
 			
 			// fichier résultat du reduce : ajout du suffixe "-red"
 			// Nom du fichier traité après application du reduce
-			String reduceDestFname = nomExt[0] + "-red" + "." + nomExt[1];
+			String reduceDestFname = "data/" + nomExt[0] + "-red" + "." + nomExt[1];
 			// System.out.println(reduceDestFname);
 
 			// Récupérer le format de fichier indiqué en argument

@@ -174,7 +174,7 @@ public class HidoopClient {
 			System.out.println("Fin du sémaphore");
 			
 			// récupérer le fichier traité via HDFS
-			HdfsClient.HdfsRead(hdfsFname, localFSDestFname);
+			HdfsClient.HdfsRead(hdfsFname, localFSDestFname, nbCluster);
 			System.out.println("Lecture terminée");
 			
 			// Reader : fichier local après traitement sur les machines du cluster
@@ -196,6 +196,8 @@ public class HidoopClient {
 			
 			reader.close();
 			writer.close();
+			
+			System.exit(0);
 						
 		} catch (RemoteException e) {
 			e.printStackTrace();

@@ -121,10 +121,6 @@ public class Job implements JobInterface {
 					// retourner au début de celle-ci ; ainsi, on parcourt
 					// bien les fragments conformément à HDFS
 					
-					if (i%1000 == 0) {
-						// System.out.println(i);
-					}
-					
 					listeDaemon[i%nbDaemons].runMap(mr, reader, writer, cb);
 			}
 			

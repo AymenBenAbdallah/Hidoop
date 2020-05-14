@@ -24,7 +24,6 @@ public class CallBackImpl extends UnicastRemoteObject implements CallBack {
 	// compter le nombre de tâches finies
 	public void tacheFinie() throws RemoteException {
 		this.cpt++;
-		System.out.println(cpt);
 		
 		// s'il y a autant d'appels à tacheFinie que de fragments
 		if (cpt == nbFragments) {

@@ -70,7 +70,7 @@ public class HidoopClient {
 			if (noms.length != 0 && ports.length == noms.length) {
 				for (int i=0 ; i < nbMachines ; i++) {
 					urls[i] = "//" + noms[i] + ":" + ports[i] + "/Daemon";
-					System.out.println(urls[i]);
+					// System.out.println(urls[i]);
 				}
 			} else {
 				usage_config();
@@ -127,7 +127,7 @@ public class HidoopClient {
 			// fichier résultat du reduce : ajout du suffixe "-red"
 			// Nom du fichier traité après application du reduce
 			String reduceDestFname = nomExt[0] + "-red" + "." + nomExt[1];
-			System.out.println(reduceDestFname);
+			// System.out.println(reduceDestFname);
 
 			// Récupérer le format de fichier indiqué en argument
 			if (args[1].equals("line")) {
@@ -175,7 +175,7 @@ public class HidoopClient {
 			
 			// récupérer le fichier traité via HDFS
 			HdfsClient.HdfsRead(hdfsFname, localFSDestFname);
-			System.out.println("fin du read ***");
+			System.out.println("Lecture terminée");
 			
 			// Reader : fichier local après traitement sur les machines du cluster
 			// Writer : fichier final généré après application du reduce

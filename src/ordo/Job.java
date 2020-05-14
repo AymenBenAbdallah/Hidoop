@@ -113,9 +113,6 @@ public class Job implements JobInterface {
 
 					// fragment destination : ajouter le suffixe "-res";
 					fdest = nomExt[0] + "_" + i + "-res" + "." + nomExt[1];
-					
-					System.out.println("fsce : " + fsce);
-					System.out.println("fdest : " + fdest);
 	
 					reader = new LineFormat(fsce);
 					writer = new KVFormat(fdest);
@@ -123,7 +120,11 @@ public class Job implements JobInterface {
 					// compteur : si on atteint la fin de la liste de démons,
 					// retourner au début de celle-ci ; ainsi, on parcourt
 					// bien les fragments conformément à HDFS
-					System.out.println(i%nbDaemons);
+					
+					if (i%1000 == 0) {
+						System.out.println(i);
+					}
+					
 					listeDaemon[i%nbDaemons].runMap(mr, reader, writer, cb);
 			}
 			

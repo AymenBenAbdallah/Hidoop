@@ -66,6 +66,9 @@ public class Job implements JobInterface {
 	
 	// appliquer runMap sur tous les fragments du fichier d'origine
 	public void startJob(MapReduce mr) {
+		// chemin d'accès vers les fragments
+		String path = "/tmp/data/";
+		
 		// reader ; fragment source (LineFormat dans l'application comptage de mots)
 		String fsce;
 		Format reader;
@@ -92,7 +95,7 @@ public class Job implements JobInterface {
 		if (nbFragments == 1) {
 			// on met le suffixe "_1" pour le premier fragment
 
-			fsce = nomExt[0] + "_1" + "." + nomExt[1];
+			fsce = path + nomExt[0] + "_1" + "." + nomExt[1];
 			nomExt = fsce.split("\\.");
 
 			fdest = fsce + "-res";
@@ -106,7 +109,7 @@ public class Job implements JobInterface {
 		} else {
 			for (int i = 0 ; i < nbFragments; i++) {
 					// format des noms de fragments : "<nom fichier HDFS>_< n° fragment >"
-					fsce = nomExt[0] + "_" + i + "." + nomExt[1];
+					fsce = path + nomExt[0] + "_" + i + "." + nomExt[1];
 
 					// fragment destination : ajouter le suffixe "-res";
 					fdest = nomExt[0] + "_" + i + "-res" + "." + nomExt[1];

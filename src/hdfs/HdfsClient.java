@@ -224,7 +224,7 @@ public class HdfsClient {
                     objectOS.writeObject("CMD_WRITE" + "/@/" + nom + "_" + Integer.toString(i) + "." + extension + "/@/" + fragment);
                     objectOS.close();
                     socket.close();
-                    if (i%1000==0){System.out.println("fragment machine " + Integer.toString(i));}
+                    if (i%1==0){System.out.println("fragment machine " + Integer.toString(i));}
 		    //System.out.println("le fragment " + Integer.toString(i) + " a été bien envoyé à " + nomMachines[t]);
                 }
                 fichier.close();
@@ -265,7 +265,7 @@ public class HdfsClient {
 
     }
 
-    public static void HdfsRead(String hdfsFname, String localFSDestFname) {      
+    public static void HdfsRead(String hdfsFname, String localFSDestFname, int nb) {      
         String[] inter = hdfsFname.split("\\.");
         String nom = inter[0];
         String extension = inter[1];
@@ -278,7 +278,7 @@ public class HdfsClient {
             int nbfragments = node.getNbFragments(hdfsFname);
             for (int i = 0; i < nbfragments; i++) {
                 //System.out.println(Integer.toString(i));
-                j = i % nbServers;
+                j = i % nb;
                 //System.out.println(Integer.toString(j));
                 Socket socket = new Socket (nomMachines[j], numPorts[j]);
                 ObjectOutputStream objectOS = new ObjectOutputStream(socket.getOutputStream());
@@ -305,7 +305,7 @@ public class HdfsClient {
 	    numPorts = recupport();
 	    nomMachines = recupnom();
             switch (args[0]) {
-              case "read": HdfsRead(args[1],args[2]); break;
+              case "read": HdfsRead(args[1],args[2],4); break;
               case "delete": HdfsDelete(args[1]); break;
               case "write": 
                 Format.Type fmt;

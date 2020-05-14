@@ -61,7 +61,7 @@ public class HdfsServer {
                         
                     
                     case "CMD_READ" :
-                        File rFile = new File("/tmp/"+ req[1]);
+                        File rFile = new File("/tmp/data/"+ req[1]);
                         BufferedReader bufReader = new BufferedReader(new FileReader(rFile));
                         String fragment = "";
                         String d = bufReader.readLine();

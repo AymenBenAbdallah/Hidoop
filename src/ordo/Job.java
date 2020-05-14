@@ -112,7 +112,7 @@ public class Job implements JobInterface {
 					fsce = path + nomExt[0] + "_" + i + "." + nomExt[1];
 
 					// fragment destination : ajouter le suffixe "-res";
-					fdest = nomExt[0] + "_" + i + "-res" + "." + nomExt[1];
+					fdest = path + nomExt[0] + "_" + i + "-res" + "." + nomExt[1];
 	
 					reader = new LineFormat(fsce);
 					writer = new KVFormat(fdest);
